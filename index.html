@@ -14,7 +14,7 @@
         <h1 class="header__h1">Adnan Valdes</h1>
         <h2 class="header__h2">Junior Developer / System Administrator</h2>
         <article class="header__article">
-            <p>Transitioning from a 10-year career as an airline pilot to IT, with expertise in managing Linux systems and homelab environments. Experienced in virtualization, system administration, and troubleshooting. Passionate about growing into system administration roles with a focus on Linux, networking, automation, and development</p>
+            <p>Transitioning from a 10-year career as an airline pilot to IT, with expertise in managing Linux systems and homelab environments. Experienced in virtualization, system administration, and troubleshooting. Passionate about growing into system administration roles with a focus on Linux, networking, automation, and development using open-source software.</p>
         </article>
         <nav class="header__nav">
             <ul class="header__ul">
@@ -168,21 +168,18 @@
                         <h3 class="education__h3">
                             <a href="https://www.ubc.ca/">University of British Columbia</a>
                         </h3>
-                        <h4 class="education__h4">BA Degree, History</h4>
+                        <h4 class="education__h4">Bachelor of Arts, History</h4>
                         <time datetime="2011-09-01">Sep 2011</time> – <time datetime="2015-05-15">May 2015</time>
                     </header>
                         <p>
-                            Major focus on research methodologies in the Early Middle Ages, particularly the nascent Carolingian Empire. 
+                            Major focus on research methodologies, historiography, and literature in the Early Middle Ages, particularly the nascent Carolingian Empire.
                         </p>
                         <ul class="education__ul">
                             <li>
-                                Trained new hires in technical and operational aspects of the aircraft, company, and environment.
+                                Historiography and research on political and religious systems in the Middle Ages.
                             </li>
                             <li>
-                                Collaborated with departments and stakeholders to ensure operational efficiency.
-                            </li>
-                            <li>
-                                Helped update training and operations documentation for Flight Operations department.
+                                Literature and authority in postlapsarian societies.
                             </li>
                         </ul>
                 </article>
@@ -194,19 +191,91 @@
                         <h4 class="education__h4">Commercial Pilot's License</h4>
                         <time datetime="2013-05-01">May 2013</time> – <time datetime="2015-05-15">May 2015</time>
                     </header>
-                    <p>Operated Saab-Fairchild 340 (SF34) aircraft in Western Canada, provided training to new pilots, and taught initial technical courses.</p>
+                    <p>Commercial flight training with a foundation on understanding and interpretation of meteorology, theory of flight, mechanical principles, and regulatory frameworks.</p>
                     <ul class="education__ul">
                         <li>
-                            Trained new hires in technical and operational aspects of the aircraft, company, and environment.
+                            Commercial pilot's license and flight instructor training.
                         </li>
                         <li>
-                            Collaborated with departments and stakeholders to ensure operational efficiency.
+                            Multi-engine operations and instrument procedures training.
                         </li>
                         <li>
-                            Helped update training and operations documentation for Flight Operations department.
+                            Courses in aeronautics, including meteorology, navigation, law, and aerodynamics.
                         </li>
                     </ul>
                 </article>
+        <section id="projects" class="main__section projects">
+            <h2 class="projects__h2">Projects</h2>
+            <article class="projects__article" id="homelab">
+                <header class="projects__header">
+                    <h3 class="projects__h3">
+                        <a href="homelab.html">Homelab</a>
+                    </h3>
+                </header>
+                <p>Ongoing homelab environment consisting of Proxmox VE and several Linux systems (bare metal and virtualized), handling network services, system configuration, and maintenance.</p>
+                <ul class="projects__ul">
+                    <li>
+                        Configured and maintained Linux servers for personal and development use, including remote access and user management.
+                    </li>
+                    <li>
+                        Manage and configure backups, replication, and High-Availability environments.
+                    </li>
+                    <li>
+                        Set up and maintain network infrastructure with VLANs, SSL certificates, reverse proxies.
+                    </li>
+                    <li>
+                        Tools used: LXC, Git, Ansible, Python, Bash, pfSense, Nginx, Cloudflare, Wireguard, Tailscale, Proxmox VE, NFS, CIFS, Authentik.
+                    </li>
+                </ul>
+            </article>
+            <article class="projects__article" id="website">
+                <header class="projects__header">
+                    <h3 class="projects__h3">
+                        <a href="/">Personal website</a>
+                    </h3>
+                </header>
+                <p>This website.</p>
+                <ul class="projects__ul">
+                    <li>
+                        Tools used: HTML5, CSS3, Jinja2, Nginx, Github.
+                    </li>
+                </ul>
+            </article>
+            <article class="projects__article" id="3380books">
+                <header class="projects__header">
+                    <h3 class="projects__h3">
+                        <a href="https://github.com/adnanvaldes/3380">3380 Books</a>
+                    </h3>
+                </header>
+                <p>A natural-language processing application using the <a href="https://cseweb.ucsd.edu/~jmcauley/datasets.html#goodreads">USCD Book Graph Dataset</a> to make recommendations based on semantic similarity clusters in book reviews.</p>
+                <ul class="projects__ul">
+                    <li>
+                        Extracted, transformed, and loaded a dataset with over 2.3 million books and 15 million reviews.
+                    </li>
+                    <li>
+                        Created Streamlit application to analyze reviews for any particular book in the (filtered) dataset so that the model can be run on a consumer machine.
+                    </li>
+                    <li>
+                        Tools used: Numpy, Pandas, Tensorflow Universtal Sentence Encoder, SciPy TF-IDF vectorizer, KMeans Clustering.
+                    </li>
+                </ul>
+            </article>
+            <article class="projects__article" id="ycs">
+                <header class="projects__header">
+                    <h3 class="projects__h3">
+                        <a href="https://github.com/adnanvaldes/ycs">Yeelight Control Script</a>
+                    </h3>
+                </header>
+                <p>Python script designed to run in a Docker container to manage a set of Yeelight smart bulbs.</p>
+                <ul class="projects__ul">
+                    <li>
+                        Python script packaged in Docker using an external API to control smart bulb light intensities.
+                    </li>
+                    <li>
+                        Tools used: Docker, Python.
+                    </li>
+                </ul>
+            </article>
     </main>
 </body>
 </html>
