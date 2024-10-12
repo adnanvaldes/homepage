@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,500;1,500&display=swap');
+
+/* || RESET */
+
+*, *::after, *::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+input,
+button,
+textarea {
+    font: inherit;
+}
+
+/* || VARIABLES */
+
+:root {
+    /* FONTS */
+    --FF: "Red Hat Display", sans-serif;
+    --FS: clamp(1rem, 1vh, 1.5rem);
+    
+    /* COLORS */
+    --BLACK: #000;
+    --BLUE: #226CE0;
+    --GRAY: #B8B7B8;
+    --GREEN: #1B998B;
+    --WHITE: whitesmoke;
+
+    --BGCOLOR: var(--WHITE);
+    --HEADER-BGCOLOR: var(--GRAY);
+    --FONT-COLOR: var(--BLACK);
+    --LINK-COLOR: var(--BLUE);
+    --LINK-HOVER: rgba(34, 108, 224, .6);
+
+    /* STANDARD MARGIN */
+    --MARGIN: clamp(0.5em, 1vh, 1em) auto;
+}
+
+/* || UTILITY CLASSES */
+
+.offscreen {
+    position: absolute;
+    left: -10000px;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+
+/* || GENERAL STYLES */
+
+html {
+    scroll-behavior: smooth;
+    font-size: var(--FS);
+    font-family: var(--FF);
+    background-color: var(--BGCOLOR);
+    min-width: 1vh;
+}
+
+body {
+    display: grid;
+    grid-template-columns: [full-start] auto [main-start side-start] minmax(min-content, 12em) [side-end content-start] minmax(auto, 800px) [main-end content-end] auto [full-end];
+}
+
+main {
+    grid-column: main;
+}
+
+section {
+    grid-column: 3 / 4;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: repeat(auto, 1fr);
+    gap: 1em;
+}
+
+article {
+    grid-column: 2 / 3;
+}
+
+/* || MASTHEAD */
+
+.masthead {
+    grid-template-columns: inherit;
+    grid-column: full;
+    display: inherit;
+    background-color: var(--HEADER-BGCOLOR);
+}
+
+.masthead > * {
+    grid-column: main;
+}
+
+.masthead__nav {
+    
+}
