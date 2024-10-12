@@ -71,7 +71,7 @@ html {
 body {
     display: grid;
     /* Taken from JSON Resume template */
-    grid-template-columns: [full-start] auto [main-start side-start] minmax(min-content, 1em) [side-end content-start] minmax(auto, 800px) [main-end content-end] auto [full-end];
+    grid-template-columns: [full-start] 1fr [main-start side-start] minmax(min-content, 1em) [side-end content-start] minmax(100px, 800px) [main-end content-end] 1fr [full-end];
     max-height: 100vh;
     column-gap: var(--COLUMN-GAP);
 }
@@ -90,6 +90,12 @@ a:active {
     color: var(--GREEN);
 }
 
+footer {
+    grid-column: full;
+    text-align: center;
+    background-color: var(--HEADER-BGCOLOR);
+    padding: 1em;
+}
 
 /* || HEADER */
 
@@ -98,13 +104,17 @@ a:active {
     grid-column: full;
     display: inherit;
     background-color: var(--HEADER-BGCOLOR);
-    padding: 1%;
+    padding-top: 2%;
     column-gap: inherit;
 }
 
 .header > * {
     grid-column: main;
-    padding: 0.25em;
+    padding: 1em;
+}
+
+.header p {
+    padding-top: 1em;
 }
 
 .header__ul {
@@ -113,22 +123,41 @@ a:active {
     justify-content: space-evenly;
 }
 
-/* || MAIN SECTION */
+/* || MAIN */
 
 main {
     display: inherit;
     grid-template-columns: inherit;
     grid-column: full;
-    margin: 0.5em;
+    margin: var(--MARGIN);
     column-gap: inherit;
+    row-gap: 1vh;
 }
 
 .main__h2 {
     grid-column: side;
-    text-align:right;
+    text-align: left;
 }
 
+/* || SECTION */
 
+section {
+    display: flex;
+    flex-wrap: wrap;
+    grid-column: content;
+}
+
+section ul {
+    list-style-type: none;
+}
+
+.section__skills, .section__certificates {
+    justify-content: space-between;
+}
+
+.section__languages {
+    justify-content: space-evenly;
+}
 /* || ARTICLE */
 
 .article {
@@ -150,7 +179,6 @@ main {
     margin: .5%;
 }
 
-time {
+.article__p, time {
     color: var(--FONT-DIM);
 }
-
