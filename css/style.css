@@ -37,11 +37,13 @@ textarea {
     --BGCOLOR: var(--WHITE);
     --HEADER-BGCOLOR: var(--GRAY);
     --FONT-COLOR: var(--BLACK);
+    --FONT-DIM: #00000098;
     --LINK-COLOR: var(--BLUE);
     --LINK-HOVER: rgba(34, 108, 224, .6);
 
     /* STANDARD MARGIN */
     --MARGIN: clamp(0.5em, 1vh, 1em) auto;
+    --COLUMN-GAP: 1em;
 }
 
 /* || UTILITY CLASSES */
@@ -68,27 +70,28 @@ html {
 
 body {
     display: grid;
-    grid-template-columns: [full-start] auto [main-start side-start] minmax(min-content, 12em) [side-end content-start] minmax(auto, 800px) [main-end content-end] auto [full-end];
+    /* Taken from JSON Resume template */
+    grid-template-columns: [full-start] auto [main-start side-start] minmax(min-content, 1em) [side-end content-start] minmax(auto, 800px) [main-end content-end] auto [full-end];
     max-height: 100vh;
+    column-gap: var(--COLUMN-GAP);
 }
 
-main {
-    grid-column: main;
+a:any-link {
+    color: var(--LINK-COLOR);
+    text-decoration: none;
 }
 
-section {
-    grid-column: main;
-    grid-row: 2;
-    display: grid;
-    grid-template-columns: repeat(auto, 1fr);
-    gap: 1em;
+a:focus,
+a:hover {
+    color: var(--LINK-HOVER);
 }
 
-/* article {
-    grid-column: 2 / 3;
+a:active {
+    color: var(--GREEN);
 }
 
-/* || MASTHEAD */
+
+/* || HEADER */
 
 .header {
     grid-template-columns: inherit;
@@ -96,6 +99,7 @@ section {
     display: inherit;
     background-color: var(--HEADER-BGCOLOR);
     padding: 1%;
+    column-gap: inherit;
 }
 
 .header > * {
@@ -108,3 +112,45 @@ section {
     display: flex;
     justify-content: space-evenly;
 }
+
+/* || MAIN SECTION */
+
+main {
+    display: inherit;
+    grid-template-columns: inherit;
+    grid-column: full;
+    margin: 0.5em;
+    column-gap: inherit;
+}
+
+.main__h2 {
+    grid-column: side;
+    text-align:right;
+}
+
+
+/* || ARTICLE */
+
+.article {
+    grid-column: content;
+    padding-right: 1.5em;
+    margin-top: .5%;
+}
+
+.article__header {
+    margin-bottom: 1%
+}
+
+.article__ul {
+    margin-top: 1em;
+    list-style-position: inside;
+}
+
+.article__ul li {
+    margin: .5%;
+}
+
+time {
+    color: var(--FONT-DIM);
+}
+
