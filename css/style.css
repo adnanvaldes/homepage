@@ -42,19 +42,67 @@ textarea {
   /* STANDARD MARGIN */
   --MARGIN: clamp(0.5em, 1vh, 1em) auto;
   --COLUMN-GAP: 1em;
+
+  /* DARKMODE TOGGLE */
+  --TOGGLE-SCALE: 75px;
+  --TOGGLE-OFFSET: 4px;
+  --TOGGLE-BUTTON-SCALE: calc(var(--TOGGLE-SCALE) / 2 - var(--TOGGLE-OFFSET));
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --BGCOLOR: #202224;
-        --HEADER-BGCOLOR: #90B0D8;
-        --HEADER-FONT-COLOR: #202224;
-        --FONT-COLOR: #E2DFDA;
-        --FONT-DIM: #959493;
-        --LINK-COLOR: #90B0D8;
-        --LINK-HOVER: rgba(34, 108, 224, 0.6);
-        --LINK-ACTIVE: #1b998b;
-    }
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --BGCOLOR: #202224;
+    --HEADER-BGCOLOR: #90b0d8;
+    --HEADER-FONT-COLOR: #202224;
+    --FONT-COLOR: #e2dfda;
+    --FONT-DIM: #959493;
+    --LINK-COLOR: #90b0d8;
+    --LINK-HOVER: rgba(34, 108, 224, 0.6);
+    --LINK-ACTIVE: #1b998b;
+  }
+} */
+
+label {
+  width: var(--TOGGLE-SCALE);
+  height: calc(var(--TOGGLE-SCALE) / 2);
+  position: absolute;
+  background: white;
+  border-radius: var(--TOGGLE-SCALE);
+  box-shadow: inset 0px 5px 15px rgba(0,0,0,0.4), inset 0px -5px 15px rgba(255,255,255,0.4);
+  display: block;
+  transition: 0.3s;
+  align-self: start;
+  top: 2%;
+  right: 2%;
+
+}
+
+label:after {
+  content: "";
+  height: var(--TOGGLE-BUTTON-SCALE);
+  width: var(--TOGGLE-BUTTON-SCALE);
+  position: absolute;
+  top: calc(var(--TOGGLE-OFFSET) / 2);
+  left: var(--TOGGLE-OFFSET);
+  background: linear-gradient(180deg, #ffcc89, #d8860b);
+  border-radius: var(--TOGGLE-BUTTON-SCALE);
+  box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+
+input {
+  width: 0;
+  height: 0;
+  visibility: hidden;
+}
+
+input:checked + label {
+  background: var(--BGCOLOR);
+}
+
+input:checked + label:after {
+  left: calc(var(--TOGGLE-SCALE) / 2);
+  background: linear-gradient(180deg, #777, #3a3a3a);
 }
 
 /* || UTILITY CLASSES */
@@ -82,11 +130,10 @@ html {
 body {
   display: grid;
   /* Taken from JSON Resume template */
-  grid-template-columns: [full-start] 1fr [main-start side-start] minmax(
-      min-content,
-      1em
-    ) [side-end content-start] minmax(100px, 800px) [main-end content-end] 1fr [full-end];
-  max-height: 100vh;
+  grid-template-columns:
+    [full-start] 1fr [main-start side-start] minmax(min-content, 1em)
+    [side-end content-start] minmax(100px, 800px)
+    [main-end content-end] 1fr [full-end];
   column-gap: var(--COLUMN-GAP);
 }
 
@@ -142,6 +189,7 @@ footer a:any-link {
   list-style-type: none;
   display: flex;
   justify-content: space-evenly;
+  align-items: center;
 }
 
 .header a:any-link {
@@ -226,3 +274,5 @@ time {
   justify-content: left;
   text-align: left;
 }
+
+
