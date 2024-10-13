@@ -1,211 +1,228 @@
-@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,500;1,500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,500;1,500&display=swap");
 
 /* || RESET */
 
-*, *::after, *::before {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 img {
-    display: block;
-    max-width: 100%;
-    height: auto;
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
 input,
 button,
 textarea {
-    font: inherit;
+  font: inherit;
 }
 
 /* || VARIABLES */
 
 :root {
-    /* FONTS */
-    --FF: "Red Hat Display", sans-serif;
-    --FS: clamp(1rem, 1vh, 1.5rem);
-    
-    /* COLORS */
-    --BGCOLOR: whitesmoke;
-    --HEADER-BGCOLOR: #2A3B7A;
-    --HEADER-FONT-COLOR: whitesmoke;
-    --FONT-COLOR: #000000;
-    --FONT-DIM: #00000098;
-    --LINK-COLOR: #2A3B7A;
-    --LINK-HOVER: rgba(34, 108, 224, .6);
-    --LINK-ACTIVE: #1B998B;
+  /* FONTS */
+  --FF: "Red Hat Display", sans-serif;
+  --FS: clamp(1rem, 1vh, 1.5rem);
 
-    /* STANDARD MARGIN */
-    --MARGIN: clamp(0.5em, 1vh, 1em) auto;
-    --COLUMN-GAP: 1em;
+  /* COLORS */
+  --BGCOLOR: whitesmoke;
+  --HEADER-BGCOLOR: #2a3b7a;
+  --HEADER-FONT-COLOR: whitesmoke;
+  --FONT-COLOR: #000000;
+  --FONT-DIM: #00000098;
+  --LINK-COLOR: #2a3b7a;
+  --LINK-HOVER: rgba(34, 108, 224, 0.6);
+  --LINK-ACTIVE: #1b998b;
+
+  /* STANDARD MARGIN */
+  --MARGIN: clamp(0.5em, 1vh, 1em) auto;
+  --COLUMN-GAP: 1em;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --BGCOLOR: #202224;
+        --HEADER-BGCOLOR: #90B0D8;
+        --HEADER-FONT-COLOR: #202224;
+        --FONT-COLOR: #E2DFDA;
+        --FONT-DIM: #959493;
+        --LINK-COLOR: #90B0D8;
+        --LINK-HOVER: rgba(34, 108, 224, 0.6);
+        --LINK-ACTIVE: #1b998b;
+    }
 }
 
 /* || UTILITY CLASSES */
 
 .offscreen {
-    position: absolute;
-    left: -10000px;
+  position: absolute;
+  left: -10000px;
 }
 
 .nowrap {
-    white-space: nowrap;
+  white-space: nowrap;
 }
-
 
 /* || GENERAL STYLES */
 
 html {
-    scroll-behavior: smooth;
-    font-size: var(--FS);
-    font-family: var(--FF);
-    background-color: var(--BGCOLOR);
-    color: var(--FONT-COLOR);
-    line-height: 1.5;
+  scroll-behavior: smooth;
+  font-size: var(--FS);
+  font-family: var(--FF);
+  background-color: var(--BGCOLOR);
+  color: var(--FONT-COLOR);
+  line-height: 1.5;
 }
 
 body {
-    display: grid;
-    /* Taken from JSON Resume template */
-    grid-template-columns: [full-start] 1fr [main-start side-start] minmax(min-content, 1em) [side-end content-start] minmax(100px, 800px) [main-end content-end] 1fr [full-end];
-    max-height: 100vh;
-    column-gap: var(--COLUMN-GAP);
+  display: grid;
+  /* Taken from JSON Resume template */
+  grid-template-columns: [full-start] 1fr [main-start side-start] minmax(
+      min-content,
+      1em
+    ) [side-end content-start] minmax(100px, 800px) [main-end content-end] 1fr [full-end];
+  max-height: 100vh;
+  column-gap: var(--COLUMN-GAP);
 }
 
 a:any-link {
-    color: var(--LINK-COLOR);
-    text-decoration: none;
+  color: var(--LINK-COLOR);
+  text-decoration: none;
 }
 
 a:focus,
 a:hover {
-    color: var(--LINK-HOVER);
+  color: var(--LINK-HOVER);
 }
 
 a:active {
-    color: var(--LINK-ACTIVE);
+  color: var(--LINK-ACTIVE);
 }
 
 footer {
-    grid-column: full;
-    text-align: center;
-    background-color: var(--HEADER-BGCOLOR);
-    padding: 1em;
-    color: var(--HEADER-FONT-COLOR);
-    display: inherit;
+  grid-column: full;
+  text-align: center;
+  background-color: var(--HEADER-BGCOLOR);
+  padding: 1em;
+  color: var(--HEADER-FONT-COLOR);
+  display: inherit;
 }
 
 footer a:any-link {
-    color: var(--HEADER-FONT-COLOR);
+  color: var(--HEADER-FONT-COLOR);
 }
 
 /* || HEADER */
 
 .header {
-    grid-template-columns: inherit;
-    grid-column: full;
-    display: inherit;
-    background-color: var(--HEADER-BGCOLOR);
-    color: var(--HEADER-FONT-COLOR);
-    padding-top: 2%;
-    column-gap: inherit;
+  grid-template-columns: inherit;
+  grid-column: full;
+  display: inherit;
+  background-color: var(--HEADER-BGCOLOR);
+  color: var(--HEADER-FONT-COLOR);
+  padding-top: 2%;
+  column-gap: inherit;
 }
 
 .header > * {
-    grid-column: main;
-    padding: 1em;
+  grid-column: main;
+  padding: 1em;
 }
 
 .header p {
-    padding-top: 1em;
+  padding-top: 1em;
 }
 
 .header__ul {
-    list-style-type: none;
-    display: flex;
-    justify-content: space-evenly;
+  list-style-type: none;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .header a:any-link {
-    color: var(--HEADER-FONT-COLOR);
+  color: var(--HEADER-FONT-COLOR);
 }
 
 .header a:focus,
 .header a:hover {
-    color: var(--LINK-HOVER);
+  color: var(--LINK-HOVER);
 }
 
 .header a:active {
-    color: var(--LINK-ACTIVE);
+  color: var(--LINK-ACTIVE);
 }
-
 
 /* || MAIN */
 
 main {
-    display: inherit;
-    grid-template-columns: inherit;
-    grid-column: full;
-    margin: var(--MARGIN);
-    column-gap: inherit;
-    row-gap: 1vh;
+  display: inherit;
+  grid-template-columns: inherit;
+  grid-column: full;
+  margin: var(--MARGIN);
+  column-gap: inherit;
+  row-gap: 1vh;
 }
 
 .main__h2 {
-    grid-column: side;
-    text-align: left;
+  grid-column: side;
+  text-align: left;
 }
 
 /* || SECTION */
 
 section {
-    display: flex;
-    flex-wrap: wrap;
-    grid-column: content;
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: content;
 }
 
 section ul {
-    list-style-type: none;
+  list-style-type: none;
 }
 
-.section__skills, .section__certificates {
-    justify-content: space-between;
+.section__skills,
+.section__certificates {
+  justify-content: space-between;
 }
 
 .section__languages {
-    justify-content: space-evenly;
+  justify-content: space-evenly;
 }
 /* || ARTICLE */
 
 .article {
-    grid-column: content;
-    padding-right: 1.5em;
-    margin-top: .5%;
+  grid-column: content;
+  padding-right: 1.5em;
+  margin-top: 0.5%;
 }
 
 .article__header {
-    margin-bottom: 1%
+  margin-bottom: 1%;
 }
 
 .article__ul {
-    margin-top: 1em;
-    list-style-position: inside;
+  margin-top: 1em;
+  list-style-position: inside;
 }
 
 .article__ul li {
-    margin: .5%;
+  margin: 0.5%;
 }
 
-.article__p, time {
-    color: var(--FONT-DIM);
+.article__p,
+time {
+  color: var(--FONT-DIM);
 }
-
 
 /* || FOOTER */
 
 .social {
-    grid-column: full;
-    justify-content: left;
-    text-align: left;
+  grid-column: full;
+  justify-content: left;
+  text-align: left;
 }
