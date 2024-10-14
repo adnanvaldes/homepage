@@ -1,3 +1,7 @@
+
+let lightIcon = "img/sun.svg";
+let darkIcon =  "img/moon.svg";
+
 function enableDark() {
     document.documentElement.style.setProperty('--BGCOLOR', '#202224');
     document.documentElement.style.setProperty('--HEADER-BGCOLOR', '#90b0d8');
@@ -7,7 +11,8 @@ function enableDark() {
     document.documentElement.style.setProperty('--LINK-COLOR', '#90b0d8');
     document.documentElement.style.setProperty('--LINK-HOVER', 'rgba(34, 108, 224, 0.6)');
     document.documentElement.style.setProperty('--LINK-ACTIVE', '#1b998b');
-    document.getElementById("mode-label").textContent="Light Mode";
+    document.getElementById("darkmode-img").src=lightIcon
+    document.getElementById("darkmode-img").alt="Dark";
 };
 
 function enableLight() {
@@ -19,11 +24,12 @@ function enableLight() {
     document.documentElement.style.setProperty('--LINK-COLOR', '#2a3b7a');
     document.documentElement.style.setProperty('--LINK-HOVER', 'rgba(34, 108, 224, 0.6)');
     document.documentElement.style.setProperty('--LINK-ACTIVE', '#1b998b');
-    document.getElementById("mode-label").textContent="Dark Mode";
+    document.getElementById("darkmode-img").src=darkIcon;
+    document.getElementById("darkmode-img").alt="Light";
 };
 
 addEventListener("change", function() {
-    if (document.getElementById("mode-label").textContent == "Light Mode") {
+    if (document.getElementById("darkmode-img").alt == "Dark") {
         enableLight();
         console.log("Lightmode enabled");
     }
@@ -45,5 +51,5 @@ if (window.matchMedia) {
     }
   } else {
     // Default (when Media-Queries are not supported)
-    document.getElementById("mode-label").textContent="Dark Mode";
+    document.getElementById("darkmode-img").alt="Light";
   }

@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,500;1,500&display=swap");
+@import url("https://www.nerdfonts.com/assets/css/webfont.css");
 
 /* || RESET */
 
@@ -28,6 +29,7 @@ textarea {
   /* FONTS */
   --FF: "Red Hat Display", sans-serif;
   --FS: clamp(1rem, 1vh, 1.5rem);
+  --ICON-SIZE: clamp(15px, 20px, 25px);
 
   /* COLORS */
   --BGCOLOR: whitesmoke;
@@ -108,6 +110,10 @@ footer a:any-link {
   color: var(--HEADER-FONT-COLOR);
 }
 
+img {
+  height: var(--ICON-SIZE);
+  width: var(--ICON-SIZE);
+}
 /* || HEADER */
 
 .header {
@@ -129,6 +135,13 @@ footer a:any-link {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.header__h1 span {
+  display: inherit;
+  align-items: inherit;
+  justify-content: inherit;
+  gap: 0.5rem;
 }
 
 .header p {
@@ -241,6 +254,6 @@ footer a:active {
   display: flex;
   flex-wrap: wrap;
   justify-content:center; 
-  gap: 1rem; 
   list-style-type: none;
+  gap: 0.5rem;
 }
