@@ -113,6 +113,7 @@ footer a:any-link {
 img {
   height: var(--ICON-SIZE);
   width: var(--ICON-SIZE);
+  cursor: pointer;
 }
 /* || HEADER */
 
@@ -256,4 +257,12 @@ footer a:active {
   justify-content:center; 
   list-style-type: none;
   gap: 0.5rem;
+}
+
+
+@media screen and (max-width: 757px) {
+  .main__h2 {
+    grid-column: content;
+  }
+  
 }
