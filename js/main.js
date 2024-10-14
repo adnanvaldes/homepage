@@ -1,6 +1,3 @@
-// const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-// prefersDarkScheme.addEventListener("change", e => e.matches && enableDark());
-
 function enableDark() {
     document.documentElement.style.setProperty('--BGCOLOR', '#202224');
     document.documentElement.style.setProperty('--HEADER-BGCOLOR', '#90b0d8');
@@ -10,7 +7,7 @@ function enableDark() {
     document.documentElement.style.setProperty('--LINK-COLOR', '#90b0d8');
     document.documentElement.style.setProperty('--LINK-HOVER', 'rgba(34, 108, 224, 0.6)');
     document.documentElement.style.setProperty('--LINK-ACTIVE', '#1b998b');
-    document.getElementById('darkmode').checked = true;
+    document.getElementById("mode-label").textContent="Light Mode";
 };
 
 function enableLight() {
@@ -22,24 +19,24 @@ function enableLight() {
     document.documentElement.style.setProperty('--LINK-COLOR', '#2a3b7a');
     document.documentElement.style.setProperty('--LINK-HOVER', 'rgba(34, 108, 224, 0.6)');
     document.documentElement.style.setProperty('--LINK-ACTIVE', '#1b998b');
-    document.getElementById('darkmode').checked = false;
+    document.getElementById("mode-label").textContent="Dark Mode";
 };
 
 addEventListener("change", function() {
-    if (document.getElementById("darkmode").checked) {
-        enableDark();
-        console.log("Darkmode enabled");
-    }
-    else {
+    if (document.getElementById("mode-label").textContent == "Light Mode") {
         enableLight();
         console.log("Lightmode enabled");
+    }
+    else {
+        enableDark();
+        console.log("Darkmode enabled");
     }
 });
 
 
 if (window.matchMedia) {
     // Check if the dark-mode Media-Query matches
-    if(window.matchMedia('(prefers-color-scheme: dark)').matches){
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches){
       // Dark
       enableDark();
     } else {
@@ -48,5 +45,5 @@ if (window.matchMedia) {
     }
   } else {
     // Default (when Media-Queries are not supported)
-    enableLight();
+    document.getElementById("mode-label").textContent="Dark Mode";
   }
