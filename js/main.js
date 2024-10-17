@@ -3,10 +3,10 @@ let lightIcon = "img/sun.svg";
 let darkIcon =  "img/moon.svg";
 
 function enableDark() {
-    document.documentElement.style.setProperty('--BGCOLOR', '#202224');
-    document.documentElement.style.setProperty('--HEADER-BGCOLOR', '#90b0d8');
-    document.documentElement.style.setProperty('--HEADER-FONT-COLOR', '#202224');
-    document.documentElement.style.setProperty('--FONT-COLOR', '#e2dfda');
+    document.documentElement.style.setProperty('--BGCOLOR', '#1d1f21');
+    document.documentElement.style.setProperty('--HEADER-BGCOLOR', '#C9CACC');
+    document.documentElement.style.setProperty('--HEADER-FONT-COLOR', '#1d1f21');
+    document.documentElement.style.setProperty('--FONT-COLOR', '#C9CACC');
     document.documentElement.style.setProperty('--FONT-DIM', '#959493');
     document.documentElement.style.setProperty('--LINK-COLOR', '#90b0d8');
     document.documentElement.style.setProperty('--LINK-HOVER', 'rgba(34, 108, 224, 0.6)');
