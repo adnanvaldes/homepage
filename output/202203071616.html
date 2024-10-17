@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+      <head>
+      <title>Adnan</title>
+      <meta name="charset" charset="utf-8" />
+      <meta name="generator" content="Pelican"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="./theme/css/rdark.css" />
+	    <link rel="stylesheet" type="text/css" href="./theme/css/main.css" />
+      <link href="./" type="application/atom+xml" rel="alternate" title="Adnan Valdes ATOM Feed" />
+        <link href="https://adnanvaldes.pages.dev/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Adnan Valdes Full Atom Feed" />
+        <link href="https://adnanvaldes.pages.dev/feeds/feed.rss" type="application/rss+xml" rel="alternate" title="Adnan Valdes Full RSS Feed" />
+    </head>
+
+
+
+
+    <meta name="tags" content="cs" />
+    <meta name="tags" content="linux" />
+    <meta name="tags" content="project" />
+
+  <body>
+    <nav class="nav">
+      <ul class="nav__ul">
+        ||
+          <li>
+            <a href="https://adnanvaldes.pages.dev">Home</a>
+          </li>
+        ||
+          <li>
+            <a href="feeds/atom.xml">RSS</a>
+          </li>
+        ||
+          <li>
+            <a href="resume.html">Resume</a>
+          </li>
+        ||
+          <li>
+            <a href="archives.html">Archive</a>
+          </li>
+        ||
+      </ul>
+    </nav>
+    <header class="header">
+      <h1 class="header__h1">
+        <a href="./">Adnan Valdes</a>
+      </h1>
+  </header>
+  <main>
+  <article>
+    <header>
+      <h2>
+        <a href="./202203071616.html" rel="bookmark"
+           title="Permalink to Zork Server">Zork Server</a></h2>
+      
+    </header>
+    <p>I love text adventure games. I am not very good at them, but I very much enjoy the world building and interactive aspect of text-based terminal games, in much the same way that I love tabletop RPGs like <em>Dungeons and Dragons</em> or <em>Stars Without Number</em>.</p>
+<p>Text adventures are also excellent candidates for in-flight entertainment on long-haul routes. I recently travelled to Delhi from Vancouver, on a flight that was scheduled 3 days after the beginning of the Russian invasion of Ukraine. Because of the closure of Russian airspace to most airlines, my route was YVR -&gt; YYZ (3 hour stop) YYZ -&gt; Delhi. In other words, the ETE changed from about 13 hours to just over 22 hours.</p>
+<p>To set up, I bought the Zork Anthology through Steam. I know Infocom has made Zork 1 - 3 <a href="http://www.infocom-if.org/downloads/downloads.html">available for free</a>, but because this was a fairly late schedule change I decided to go the easy way and shell out $8.00 for the whole set.</p>
+<p>The games themselves work well, but I had a few problems with the set-up. To start with, I have Manjaro installed on all my computers, but the Zork Anthology only has a Windows release on Steam. Not much of an issue in itself: I regularly use Proton to play on Linux and I have had very few problems. However, the thought of running Proton to <em>then</em> run a DOS emulator to play Zork rubbed me the wrong way.</p>
+<p>The other option I've seen is to play Zork through a web-based console, such as the one on <a href="http://textadventures.co.uk/games/play/5zyoqrsugeopel3ffhz_vq">text adventures</a>. It's a good way of making the game available to a more general audiene. What it lacks, I think, is correct aesthetic. That is, when running the game on a terminal all you see is the game's text and your prompt - what's more, you can have the terminal use your personalized colors and font. The browser version, on the other hand, has a much smaller play area, uses a single console theme, and is full of distractions, with tabs, links, ads, JS scripts, etc.</p>
+<p>After landing in Delhi, then, I decided I would create my own Zork server. Originally I wanted to run it in my home, using Proxmox and LXC containers, but because I also wanted to make it available to the public, the end result is a GCP instance.</p>
+<h1>Setting up an SSH Infocom server</h1>
+<p>The first decision I made was to use SSH for access into the server. I looked around and saw that there were a few Telnet servers that others have created in the past few years. You could argue that Telnet is a more appropriate protocol for a retro game (which allows for easier access, given the nature of Telnet itself). However, on a Windows machine the Telnet client has to be explicitly enabled via the command line or through the system settings interface; this alone adds an extra barrier to entry for my friends who are not huge computer nerds.</p>
+<p>Additionally, SSH is a more secure protocol. I don't think that transmitting commands for Zork or other text-adventure games allows for the exploitation of particularly sensitive data. Yet, given that OpenSSH is available by default on most systems, choosing the more secure option has the benefit of creating less friction.</p>
+<h2>Game files</h2>
+<p>While I could have downloaded the Zork games from the aforementioned Infocom website, I figured the Zork Anthology included the files themselves - files probably too old to have any sort of DRM. Sure enough, navigating to the anthology's local game files I found several DOSBOX <code>exe</code> files as well as a <code>.dat</code> file for Zork 1 through 3, Beyond Zork, and Planetfall.</p>
+<p>With those in hand, I had to find a program to run a <a href="https://www.wikiwand.com/en/Z-machine">Z-machine</a>. Fortunately, this was as easy as installing <a href="https://davidgriffith.gitlab.io/frotz/">Frotz</a>:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>frotz
+</code></pre></div>
+
+<p>Then, all I had to do was run <code>frotz zork.dat</code> and I was well on my way to being eaten by a grue.</p>
+<h2>Setting up an SSH server</h2>
+<p>At this point I had the games running locally, but that's not very useful if I'm somewhere else or if I want my friends to access the game. I decided to run the server on the free tier of some cloud provider, mostly to avoid opening port 22 on my home router and because I didn't want strangers SSH'ing into my computers (see below for security!). The other advantage of using a cloud provider was that most of the time I would have access to a static IP, so I would not have to worry about dynamic DNS or using an API to monitor any changes that my ISP makes.</p>
+<p>After shopping around for a bit, I settled on using Google's Compute Engine. This is partly out of familiarity - I already had a Pi-Hole instance running there - but mostly because they offer a perpetual free tier (unlike AWS, which is a 12 month trial).</p>
+<p>Setting up the VM was a breeze, too. The free tier allows you to use an E2-micro general purpose VM with 10GB of storage space, 2 vCPUs and 1GB of memory. Far more than enough for 6 games from the late 70s/early 80s that are maybe 1 MB each. </p>
+<p>I don't think it matters much, but I chose Debian 11 as my gues OS. I originally tried all of this with Alpine, but that was far too much work and I couldn't make it work.</p>
+<h3>Creating root access for set up</h3>
+<p>Once the VM was running, I used the Google Console to edit the instance's <code>sshd_config</code> file. Specifically, I allowed root access with a password (this was mostly out of frustration with trying to set up SSH keys from my computer). This was intended to be a temporary measure, just to allow me to install all the required components using my own terminal, instead of the browser-based version you get from the Google dashboard.</p>
+<div class="highlight"><pre><span></span><code>PermitRootLogin yes
+StrictMode yes
+MasAuthTries 3
+MassSessions 1
+
+PasswordAuthentication yes
+PermitEmptyPasswords no
+</code></pre></div>
+
+<h3>Installing frotz and firejail</h3>
+<p>Once in the VM, I installed <code>frotz</code> and <code>firejail</code>:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>frotz<span class="w"> </span>firejail
+</code></pre></div>
+
+<p>As I mentioned above, <code>frotz</code> is the interpreter used to run the games themselves. <code>firejail</code>, on the other hand, was installed as an added level of security. I am no pen tester by any means, but the firejail <a href="https://firejail.wordpress.com/">website</a> claims that it "reduces the risk of security breaches by restricting the running environment of untrusted applications using Linux namespaces and seccomp-bpf".</p>
+<p>From what I gather, this translates (at the risk of being rather reductive) to creating a sandbox or "container" wherein the relevant application is running. As a result, the program itself is less likely to be exploited to gain access to other parts of the system.</p>
+<p>The main thing about it was that the promise of a sandbox environment coupled with ridiculous ease of use (in my case at least) means there is very little risk to me. To use firejail along with frotz, this is the command I had to run (note: I created a different user to try this, since firejail sensibly refused to be run as root):</p>
+<div class="highlight"><pre><span></span><code>firejail<span class="w"> </span>frotz<span class="w"> </span>zork.dat
+</code></pre></div>
+
+<p>And just like that, the game started up. There is still some <code>stdout</code> stuff on the terminal that I don't know how to remove, but at least it suggests something is working.</p>
+<h3>adding new user, moving .DAT files</h3>
+<p>The next step was to create a specific user that would interact with the games - that is, a user that everyone has access to. Because this user is the public facing side of the set up, I also wanted to ensure that it was fairly restricted. The solution is to use <code>rbash</code>, a restrictive version of <code>bash</code> that still allows the user to use the terminal with appropriate restrictions.</p>
+<p>I started by changing the user's shell and adding the user's bin directory:</p>
+<div class="highlight"><pre><span></span><code>chsh<span class="w"> </span>-s<span class="w"> </span>/bin/rbash<span class="w"> </span>zork
+touch<span class="w"> </span>/home/zork/.bashrc
+mkdir<span class="w"> </span>-p<span class="w"> </span>/home/zork/user/bin
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;export PATH=/home/zork/usr/bin&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.bashrc
+</code></pre></div>
+
+<p>At this point, the <code>zork</code> user is unable to run any commands, since there are no programs to run in their personal <code>bin</code>. Given the nature of this set up, the only binaries that should exist in this <code>bin</code> directory are <code>firejail</code> and <code>frotz</code>:</p>
+<div class="highlight"><pre><span></span><code>ln<span class="w"> </span>-s<span class="w"> </span>/usr/bin/firejail<span class="w"> </span>/home/zork/usr/bin/firejail
+ln<span class="w"> </span>-s<span class="w"> </span>/usr/bin/frotz<span class="w"> </span>/home/zork/usr/bin/frotz
+</code></pre></div>
+
+<p>Note that I also had to set the right permissions in order for this user to access the new directory:</p>
+<div class="highlight"><pre><span></span><code>chmod<span class="w"> </span>-R<span class="w"> </span><span class="m">750</span><span class="w"> </span>/home/zork
+chown<span class="w"> </span>-R<span class="w"> </span>zork:zork<span class="w"> </span>/home/zork
+</code></pre></div>
+
+<p>Finally, I used <code>scp</code> to move the .DAT files that came with the anthology into the server. I renamed the files and removed the extension for ease of use, and so that I could add the following lines in the zork user's .bashrc:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">alias</span><span class="w"> </span><span class="nv">zork</span><span class="o">=</span><span class="s2">&quot;firejail frotz zork&quot;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">zork2</span><span class="o">=</span><span class="s2">&quot;firejail frotz zork2&quot;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">zork3</span><span class="o">=</span><span class="s2">&quot;firejail frotz zork3&quot;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">beyond_zork</span><span class="o">=</span><span class="s2">&quot;firejail frotz beyond_zork&quot;</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">planetfall</span><span class="o">=</span><span class="s2">&quot;firejail frotz planetfall&quot;</span>
+</code></pre></div>
+
+<p>With this, anybody that connects to the server can only call <code>firejail</code> or <code>frotz</code>, and with the aliases it becomes quite easy to start any of the games.</p>
+<h3>adding instructions</h3>
+<p>I added this to the server's <code>motd</code> file:</p>
+<div class="highlight"><pre><span></span><code><span class="err">######################</span>
+<span class="nx">WELCOME</span><span class="w"> </span><span class="nx">TO</span><span class="w"> </span><span class="nx">PLANETFALL</span><span class="p">!</span>
+<span class="err">######################</span>
+
+<span class="nx">This</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">microserver</span><span class="w"> </span><span class="nx">designed</span><span class="w"> </span><span class="nx">entirely</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">Infocom</span><span class="w"> </span><span class="nx">text</span><span class="w"> </span><span class="nx">adventures</span>
+<span class="nx">To</span><span class="w"> </span><span class="nx">play</span><span class="p">,</span><span class="w"> </span><span class="nx">simply</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">name</span><span class="w"> </span><span class="nx">of</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">game</span><span class="w"> </span><span class="nx">you</span><span class="w"> </span><span class="nx">want</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">play</span>
+<span class="nx">Available</span><span class="w"> </span><span class="nx">games</span><span class="w"> </span><span class="nx">are</span><span class="p">:</span>
+<span class="o">-</span><span class="w"> </span><span class="nx">zork</span>
+<span class="o">-</span><span class="w"> </span><span class="nx">zork2</span>
+<span class="o">-</span><span class="w"> </span><span class="nx">zork3</span>
+<span class="o">-</span><span class="w"> </span><span class="nx">beyond_zork</span>
+<span class="o">-</span><span class="w"> </span><span class="nx">planetfall</span>
+
+<span class="nx">Have</span><span class="w"> </span><span class="nx">fun</span><span class="p">,</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="nx">try</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">get</span><span class="w"> </span><span class="nx">eaten</span><span class="w"> </span><span class="nx">by</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">grue</span><span class="p">.</span>
+</code></pre></div>
+
+<p>I figured that is enough information to at least get started. I might change that in the future. I also still want to figure out a way to call it when a user types <code>help</code>, for example.</p>
+<h3>securing all files</h3>
+<p>To ensure that none of the files would be changed (no additions to the <code>bin</code> directory, for example), I used <code>chattr</code> (short for "change attributes").</p>
+<p>Conveniently, one of the attributes that one can set is <code>i</code> to make it immutable. From the <code>chattr</code> man page:</p>
+<div class="highlight"><pre><span></span><code>A file with the &#39;i&#39; attribute cannot be modified: it cannot be deleted or renamed, no link can  be created  to  this  file,  most of the file&#39;s metadata can not be modified, and the file can not be opened in write mode.  Only the superuser or a process possessing the CAP_LINUX_IMMUTABLE capability can set or clear this attribute.
+</code></pre></div>
+
+<p>Thus, <code>chattr +i /home/zork</code>.</p>
+    <footer>
+      <p>Published: <time datetime="2022-03-07T00:00:00-08:00">
+        Mon 07 March 2022
+      </time></p>
+        <p>Last updated: <time datetime="2024-10-04T23:08:49.068296-07:00">
+          Fri 04 October 2024
+        </time></p>
+        <address>
+          By             <a href="./">Adnan Valdes</a>
+        </address>
+        <p>
+          Category: <a href="./category/blog.html">blog</a>
+        </p>
+        <p>
+          Tags:
+            <a href="./tag/cs.html">cs</a>
+            <a href="./tag/linux.html">linux</a>
+            <a href="./tag/project.html">project</a>
+        </p>
+    </footer>
+  </article>
+  </main>
+  <footer>
+    <nav class="nav">
+      <ul class="nav__ul">
+        ||
+          <li>
+            <a href="https://adnanvaldes.pages.dev">Home</a>
+          </li>
+        ||
+          <li>
+            <a href="feeds/atom.xml">RSS</a>
+          </li>
+        ||
+          <li>
+            <a href="resume.html">Resume</a>
+          </li>
+        ||
+          <li>
+            <a href="archives.html">Archive</a>
+          </li>
+        ||
+      </ul>
+    </nav>
+  </footer>
+  </body>
+</html>

@@ -1,6 +1,5 @@
-
-let lightIcon = "img/sun.svg";
-let darkIcon =  "img/moon.svg";
+let lightIcon = "theme/img/sun.svg";
+let darkIcon =  "theme/img/moon.svg";
 
 function enableDark() {
     document.documentElement.style.setProperty('--BGCOLOR', '#1d1f21');

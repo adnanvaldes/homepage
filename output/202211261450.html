@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+      <head>
+      <title>Adnan</title>
+      <meta name="charset" charset="utf-8" />
+      <meta name="generator" content="Pelican"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="./theme/css/rdark.css" />
+	    <link rel="stylesheet" type="text/css" href="./theme/css/main.css" />
+      <link href="./" type="application/atom+xml" rel="alternate" title="Adnan Valdes ATOM Feed" />
+        <link href="https://adnanvaldes.pages.dev/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Adnan Valdes Full Atom Feed" />
+        <link href="https://adnanvaldes.pages.dev/feeds/feed.rss" type="application/rss+xml" rel="alternate" title="Adnan Valdes Full RSS Feed" />
+    </head>
+
+
+
+
+    <meta name="tags" content="blog" />
+    <meta name="tags" content="sysadmin" />
+    <meta name="tags" content="writing" />
+
+  <body>
+    <nav class="nav">
+      <ul class="nav__ul">
+        ||
+          <li>
+            <a href="https://adnanvaldes.pages.dev">Home</a>
+          </li>
+        ||
+          <li>
+            <a href="feeds/atom.xml">RSS</a>
+          </li>
+        ||
+          <li>
+            <a href="resume.html">Resume</a>
+          </li>
+        ||
+          <li>
+            <a href="archives.html">Archive</a>
+          </li>
+        ||
+      </ul>
+    </nav>
+    <header class="header">
+      <h1 class="header__h1">
+        <a href="./">Adnan Valdes</a>
+      </h1>
+  </header>
+  <main>
+  <article>
+    <header>
+      <h2>
+        <a href="./202211261450.html" rel="bookmark"
+           title="Permalink to Setting up this blog with NGINX">Setting up this blog with NGINX</a></h2>
+      
+    </header>
+    <p>One of the main goals I have for this goal is to make it as <strong>friction</strong>-less as possible to write. In an ideal world, I would be able to open my text editor (I use <a href="https://neovim.io/">nvim</a> and <a href="https://obsidian.md/">Obsidian</a>), write some content and then, with a single command, publish.</p>
+<p>I looked at solutions like <a href="https://ghost.org/">Ghost</a> and <a href="https://wordpress.com/">WordPress</a>, but they are both, well, <em>too much</em>. Or rather, they are designed, as per Ghost's tagline, for "the creator economy". That is, they include analytics, membership, revenue charts, etc. etc. I want none of that.</p>
+<p>I just want a static page with a bunch of html. Zero bells and whistles.</p>
+<p>So the next option was to either build something with a static site generator like <a href="https://getpelican.com/">Pelican</a> (which is what I'm using now!) or host the blog on a site like <a href="https://bearblog.dev/">Bear Blog</a> or <a href="https://writefreely.org/">Writefreely</a>. The latter two are pretty cool, too! Bear Blog is the essence of simplicity (and part of the inspiration for the design of this blog), while Writefreely's integration with the Fediverse is awesome. Unfortunately, the design is pretty set in stone, hosting images is more difficult, and to publish one has to place their text on a browser.</p>
+<p>For context, the way this blog was deployed before was through Cloudflare Pages. The html and css files are generated on my computer and then I had to manually upload a folder with all the html to the project page. Far too tedious, in my opinion.</p>
+<p>What I've done instead is to continue to generate the site with Pelican, but instead I host it on a VM in my server with nginx. This sits behind another nginx instance that acts as a reverse proxy for requests made through Cloudflare. Here is how I did it:</p>
+<h2>Configuring NGINX</h2>
+<h3>Config file</h3>
+<p>To serve the files I set up a VM with Debian 11 as an OS (in the future I will move this into a Docker container) and a single user in addition to <code>root</code>.  I also installed nginx from the Debian repository by running <code>sudo apt install nginx</code>.</p>
+<p>Then I created a configuration file for my site:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/etc/nginx/sites-available/
+sudo<span class="w"> </span>nvim<span class="w"> </span>terminus
+</code></pre></div>
+
+<p>In the <code>terminus</code> file, I included a very simple config:</p>
+<div class="highlight"><pre><span></span><code>server {
+        listen 80;
+
+        root /home/{YOUR_USER}/terminus/;
+        server_name blog.terminus.earth;
+
+        location / {
+                try_files $uri $uri/ =404;
+        }
+
+        location /theme {
+        }
+}
+</code></pre></div>
+
+<p>What this does is create a server that listens on port 80. That is, it is only an HTTP server (the HTTPS and certificates are all handled by my reverse proxy).</p>
+<p>The next line defines where the root of my website is located: in this case it is at <code>/home/{MY_USER}/terminus/</code>. The <code>location /</code> block establishes that the server should try looking for files at the root of the file structure and then for sub directories, otherwise return a <code>404 Error</code>.</p>
+<p>When I first deployed this configuration, however, the site would not load any of my CSS files (which are at <code>..terminus/theme/styles.css</code>).  I was very confused, too, because on my browser all I would see was a <code>503 Timeout</code> error. Turns out that even with <code>$uri/</code> set up as part of the location, the sub folder  was inaccessible. </p>
+<p>I realized what the issue was once I read the NGINX logs with <code>sudo cat /var/log/nginx/error.log</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="o">[</span><span class="n">error</span><span class="o">]</span><span class="w"> </span><span class="mi">1983</span><span class="n">#1983</span><span class="err">:</span><span class="w"> </span><span class="o">*</span><span class="mi">19</span><span class="w"> </span><span class="n">directory</span><span class="w"> </span><span class="k">index</span><span class="w"> </span><span class="k">of</span>
+<span class="ss">&quot;/home/{MY_USER}/terminus/theme/&quot;</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">forbidden</span><span class="p">,</span><span class="w"> </span><span class="nl">client</span><span class="p">:</span><span class="w"> </span><span class="mf">192.168.0.150</span><span class="p">,</span>
+<span class="nl">server</span><span class="p">:</span><span class="w"> </span><span class="mf">192.168.0.30</span><span class="p">,</span><span class="w"> </span><span class="nl">request</span><span class="p">:</span><span class="w"> </span><span class="ss">&quot;GET /theme/ HTTP/1.1&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">host</span><span class="err">:</span><span class="w"> </span>
+<span class="ss">&quot;blog.terminus.earth&quot;</span>
+</code></pre></div>
+
+<p>Turns out that while I told NGINX to look into the directory, the clients were not given permission to go there (confusing, too, since this is a forbidden error, not necessarily a timeout!). The solution was to add the second <code>location</code> line to my configuration file to explicitly allow clients access to the endpoints at <code>theme/</code>.</p>
+<h3>Enable the site</h3>
+<p>The configuration file here lives at <code>/etc/nginx/sites-available/</code>. But we want to make sure the site is <em>enabled</em>. As a result, I ran the following commands:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>rm<span class="w"> </span>/etc/nginx/sites-enabled/default
+sudo<span class="w"> </span>ln<span class="w"> </span>-s<span class="w"> </span>/etc/nginx/sites-available/terminus<span class="w"> </span>/etc/nginx/sites-enabled/terminus
+</code></pre></div>
+
+<p>This removes the default site from NGINX and uses a symlink to ensure the available site and the enabled side configs are the exact same.</p>
+<p>Then, to enable the server I simply ran:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>nginx
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>nginx
+</code></pre></div>
+
+<h2>Accessing site data</h2>
+<p>I upload my html files to my server using <code>rsync</code>. This works well, except for one problem: the files themselves are owned by my user, but the user on the server that reads the files is <code>www-data</code>.  With no further changes, NGINX was unable to read my files and was therefore displaying broken stuff on my browser.</p>
+<p>My immediate thought was, "ah! Ok so I can just <code>chown -R</code> the entire directory and change ownership to <code>www-data</code>". And this worked, until I tried to upload more files.</p>
+<p>Obviously I didn't want to change the ownership of those files every time  I wrote something. The solution I came up with was to make my user a member of the <code>www-data</code> group:</p>
+<div class="highlight"><pre><span></span><code>sudo usermod -g www-data {MY_USER}
+sudo chmod 644 terminus/*
+</code></pre></div>
+
+<p>Once this was in place, I was able to immediately write this post, rsync it to my server, and have it available within seconds.</p>
+    <footer>
+      <p>Published: <time datetime="2022-11-26T00:00:00-08:00">
+        Sat 26 November 2022
+      </time></p>
+        <p>Last updated: <time datetime="2024-10-04T23:08:49.066296-07:00">
+          Fri 04 October 2024
+        </time></p>
+        <address>
+          By             <a href="./">Adnan Valdes</a>
+        </address>
+        <p>
+          Category: <a href="./category/blog.html">blog</a>
+        </p>
+        <p>
+          Tags:
+            <a href="./tag/blog.html">blog</a>
+            <a href="./tag/sysadmin.html">sysadmin</a>
+            <a href="./tag/writing.html">writing</a>
+        </p>
+    </footer>
+  </article>
+  </main>
+  <footer>
+    <nav class="nav">
+      <ul class="nav__ul">
+        ||
+          <li>
+            <a href="https://adnanvaldes.pages.dev">Home</a>
+          </li>
+        ||
+          <li>
+            <a href="feeds/atom.xml">RSS</a>
+          </li>
+        ||
+          <li>
+            <a href="resume.html">Resume</a>
+          </li>
+        ||
+          <li>
+            <a href="archives.html">Archive</a>
+          </li>
+        ||
+      </ul>
+    </nav>
+  </footer>
+  </body>
+</html>

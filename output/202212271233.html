@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+      <head>
+      <title>Adnan</title>
+      <meta name="charset" charset="utf-8" />
+      <meta name="generator" content="Pelican"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="./theme/css/rdark.css" />
+	    <link rel="stylesheet" type="text/css" href="./theme/css/main.css" />
+      <link href="./" type="application/atom+xml" rel="alternate" title="Adnan Valdes ATOM Feed" />
+        <link href="https://adnanvaldes.pages.dev/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Adnan Valdes Full Atom Feed" />
+        <link href="https://adnanvaldes.pages.dev/feeds/feed.rss" type="application/rss+xml" rel="alternate" title="Adnan Valdes Full RSS Feed" />
+    </head>
+
+
+
+
+    <meta name="tags" content="programming" />
+    <meta name="tags" content="gamedev" />
+    <meta name="tags" content="blog" />
+    <meta name="tags" content="writing" />
+
+  <body>
+    <nav class="nav">
+      <ul class="nav__ul">
+        ||
+          <li>
+            <a href="https://adnanvaldes.pages.dev">Home</a>
+          </li>
+        ||
+          <li>
+            <a href="feeds/atom.xml">RSS</a>
+          </li>
+        ||
+          <li>
+            <a href="resume.html">Resume</a>
+          </li>
+        ||
+          <li>
+            <a href="archives.html">Archive</a>
+          </li>
+        ||
+      </ul>
+    </nav>
+    <header class="header">
+      <h1 class="header__h1">
+        <a href="./">Adnan Valdes</a>
+      </h1>
+  </header>
+  <main>
+  <article>
+    <header>
+      <h2>
+        <a href="./202212271233.html" rel="bookmark"
+           title="Permalink to Flappy Bird The Random Update">Flappy Bird The Random Update</a></h2>
+      
+    </header>
+    <h3>Random Intervals</h3>
+<p>The first update to the game was to randomise the interval between pipes spawning. </p>
+<p>The logic that spawns new pipes lives inside the <code>update</code> function of the game's <code>Play</code> state. It's a fairly simple set-up: if a timer exceeds a preset value, a new pair of pipes is spawned:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- in PlayState:update(dt)</span>
+<span class="p">...</span>
+<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">timer</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="kr">then</span>
+    <span class="c1">-- modify the last Y coordinate we placed so pipe gaps aren&#39;t too far apart</span>
+    <span class="c1">-- no higher than 10 pixels below the top edge of the screen,</span>
+    <span class="c1">-- and no lower than a gap length (90 pixels) from the bottom</span>
+    <span class="kd">local</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">math.max</span><span class="p">(</span><span class="o">-</span><span class="n">PIPE_HEIGHT</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="nb">math.min</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">lastY</span> <span class="o">+</span> <span class="nb">math.random</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="n">VIRTUAL_HEIGHT</span> <span class="o">-</span> <span class="mi">90</span> <span class="o">-</span> <span class="n">PIPE_HEIGHT</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">lastY</span> <span class="o">=</span> <span class="n">y</span>
+
+    <span class="c1">-- add a new pipe pair at the end of the screen at our new Y</span>
+    <span class="nb">table.insert</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">pipePairs</span><span class="p">,</span> <span class="n">PipePair</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+
+    <span class="c1">-- reset timer</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">timer</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="kr">end</span>
+<span class="p">...</span>
+</code></pre></div>
+
+<p>My first thought was to simply add a call to <code>math.random()</code> as part of the <code>if</code> statement. This was a <em>terrible</em> idea and made the game absolutely cursed - hundreds if not thousands not pipes were being generated and it made the game unplayable. In hindsight this was obvious:  by placing <code>if self.timer &gt; math.random(2,5) then</code> as part of the <code>update</code> loop I was forcing the game to do a check <em>every single frame</em>, and thereby causing pipes to spawn at incredibly high rates.</p>
+<p>The solution was quite simple. As part of the game state I initialised a variable called <code>self.interval</code> and set it to 2. This means that the first pipe should spawn after 2 seconds of the game starting; when a pipe does spawn I <em>then</em> reset the timer and randomise the interval. The result is that the interval between pipes is only calculated as each pipe spawns and entirely avoids the issue of having multiple pipes spawn frames apart from each other.</p>
+<div class="highlight"><pre><span></span><code><span class="kr">function</span> <span class="nc">PlayState</span><span class="p">:</span><span class="nf">init</span><span class="p">()</span>
+    <span class="p">...</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">interval</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="p">...</span>
+
+<span class="kr">function</span> <span class="nc">PlayState</span><span class="p">:</span><span class="nf">update</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">timer</span> <span class="o">&gt;</span> <span class="n">self</span><span class="p">.</span><span class="n">interval</span> <span class="kr">then</span>
+    <span class="c1">-- modify the last Y coordinate we placed so pipe gaps aren&#39;t too far apart</span>
+    <span class="c1">-- no higher than 10 pixels below the top edge of the screen,</span>
+    <span class="c1">-- and no lower than a gap length (90 pixels) from the bottom</span>
+    <span class="kd">local</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">math.max</span><span class="p">(</span><span class="o">-</span><span class="n">PIPE_HEIGHT</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> 
+                        <span class="nb">math.min</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">lastY</span> <span class="o">+</span> <span class="nb">math.random</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> 
+                                 <span class="n">VIRTUAL_HEIGHT</span> <span class="o">-</span> <span class="mi">90</span> <span class="o">-</span> <span class="n">PIPE_HEIGHT</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">lastY</span> <span class="o">=</span> <span class="n">y</span>
+
+    <span class="c1">-- add a new pipe pair at the end of the screen at our new Y</span>
+    <span class="nb">table.insert</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">pipePairs</span><span class="p">,</span> <span class="n">PipePair</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+
+    <span class="c1">-- reset timer</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">timer</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">interval</span> <span class="o">=</span> <span class="nb">math.random</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="kr">end</span>
+<span class="p">...</span>
+</code></pre></div>
+
+<h3>Random Gaps</h3>
+<p>The next step was to randomise the vertical gap between pipes. On the first version of the game the gap was hard-coded to 90 pixels.  While fun, having different sized gaps makes the game a tad more interesting.</p>
+<p>The way pipes are generated is with logic that lives inside a subclass of each <code>Pipe</code>, called <code>PipePair</code> in the code base. When the game is in its <code>Play</code> state, the state's <code>update</code> function runs and does the interval check described above. Once a pipe is ready to spawn the code generates the <code>y</code> coordinate for the pipe (since the gap between pipes is based on that coordinate). This coordinate is also saved to <code>self.lastY</code>, since we want to ensure that the new gap isn't <em>too</em> far from the previous one.</p>
+<div class="highlight"><pre><span></span><code><span class="kr">function</span> <span class="nc">PlayState</span><span class="p">:</span><span class="nf">update</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+    <span class="p">...</span>
+        <span class="kd">local</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">math.max</span><span class="p">(</span><span class="o">-</span><span class="n">PIPE_HEIGHT</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span>
+                            <span class="nb">math.min</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">lastY</span> <span class="o">+</span> <span class="nb">math.random</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> 
+                                     <span class="n">VIRTUAL_HEIGHT</span> <span class="o">-</span> <span class="mi">90</span> <span class="o">-</span> <span class="n">PIPE_HEIGHT</span><span class="p">))</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">lastY</span> <span class="o">=</span> <span class="n">y</span>
+
+        <span class="c1">-- add a new pipe pair at the end of the screen at our new Y</span>
+        <span class="nb">table.insert</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">pipePairs</span><span class="p">,</span> <span class="n">PipePair</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+    <span class="p">...</span>
+</code></pre></div>
+
+<p>The <code>y</code> coordinate is then passed to the <code>PipePair</code> constructor, which itself creates two pipes, one "upper" pipe and one "bottom" pipe:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">function</span> <span class="nc">PipePair</span><span class="p">:</span><span class="nf">init</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="p">...</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">pipes</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">[</span><span class="s1">&#39;upper&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Pipe</span><span class="p">(</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">y</span><span class="p">),</span>
+        <span class="p">[</span><span class="s1">&#39;lower&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Pipe</span><span class="p">(</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">PIPE_HEIGHT</span> <span class="o">+</span> <span class="nb">math.random</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span><span class="mi">105</span><span class="p">))</span>
+    <span class="p">}</span>
+    <span class="p">...</span>
+<span class="kr">end</span>
+</code></pre></div>
+
+<p>Because both pipes are based on the upper pipe's <code>y</code> coordinate the bottom pipe is drawn at <code>y</code> plus the height of the pipe plus a value that defines the gap between them (the bottom pipe has values <em>added</em> to it because the <code>xy</code> coordinate system starts at the top left). To create random sized gaps between pipes the solution was to simply add a random value to the bottom pipe.</p>
+    <footer>
+      <p>Published: <time datetime="2022-12-27T00:00:00-08:00">
+        Tue 27 December 2022
+      </time></p>
+        <p>Last updated: <time datetime="2024-10-04T23:08:49.062296-07:00">
+          Fri 04 October 2024
+        </time></p>
+        <address>
+          By             <a href="./">Adnan Valdes</a>
+        </address>
+        <p>
+          Category: <a href="./category/blog.html">blog</a>
+        </p>
+        <p>
+          Tags:
+            <a href="./tag/programming.html">programming</a>
+            <a href="./tag/gamedev.html">gamedev</a>
+            <a href="./tag/blog.html">blog</a>
+            <a href="./tag/writing.html">writing</a>
+        </p>
+    </footer>
+  </article>
+  </main>
+  <footer>
+    <nav class="nav">
+      <ul class="nav__ul">
+        ||
+          <li>
+            <a href="https://adnanvaldes.pages.dev">Home</a>
+          </li>
+        ||
+          <li>
+            <a href="feeds/atom.xml">RSS</a>
+          </li>
+        ||
+          <li>
+            <a href="resume.html">Resume</a>
+          </li>
+        ||
+          <li>
+            <a href="archives.html">Archive</a>
+          </li>
+        ||
+      </ul>
+    </nav>
+  </footer>
+  </body>
+</html>

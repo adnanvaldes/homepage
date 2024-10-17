@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+      <head>
+      <title>Adnan</title>
+      <meta name="charset" charset="utf-8" />
+      <meta name="generator" content="Pelican"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="./theme/css/rdark.css" />
+	    <link rel="stylesheet" type="text/css" href="./theme/css/main.css" />
+      <link href="./" type="application/atom+xml" rel="alternate" title="Adnan Valdes ATOM Feed" />
+        <link href="https://adnanvaldes.pages.dev/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Adnan Valdes Full Atom Feed" />
+        <link href="https://adnanvaldes.pages.dev/feeds/feed.rss" type="application/rss+xml" rel="alternate" title="Adnan Valdes Full RSS Feed" />
+    </head>
+
+
+
+
+    <meta name="tags" content="cs" />
+    <meta name="tags" content="programming" />
+    <meta name="tags" content="work" />
+
+  <body>
+    <nav class="nav">
+      <ul class="nav__ul">
+        ||
+          <li>
+            <a href="https://adnanvaldes.pages.dev">Home</a>
+          </li>
+        ||
+          <li>
+            <a href="feeds/atom.xml">RSS</a>
+          </li>
+        ||
+          <li>
+            <a href="resume.html">Resume</a>
+          </li>
+        ||
+          <li>
+            <a href="archives.html">Archive</a>
+          </li>
+        ||
+      </ul>
+    </nav>
+    <header class="header">
+      <h1 class="header__h1">
+        <a href="./">Adnan Valdes</a>
+      </h1>
+  </header>
+  <main>
+  <article>
+    <header>
+      <h2>
+        <a href="./202204191535.html" rel="bookmark"
+           title="Permalink to Precision Flight Controls">Precision Flight Controls</a></h2>
+      
+    </header>
+    <h2>Installing Win10 on old hardware</h2>
+<p>Originally Win 7 Pro installed on two WD Blue HDDs. Target set up: Windows 10 on a WD Blue 500G SSD to speed up boot times.</p>
+<p>Problems encountered: old motherboard, no driver support, "missing media drivers", "no OS found" after install.</p>
+<p>Solution: Install Windows 10 on SSD via a different motherboard and configure. Then plug SSD to old computer</p>
+<h2>Setting up X-Plane</h2>
+<p>X-Plane 11 installation was straightforward. NVIDIA drivers needed to be updated: GeForce GTX 750 Ti installed with drivers version 4xx. Update to 512.15.</p>
+<p>X-Plane appears to work and boots well. However, there is concern over COM port usability for hardware flight controls. Install PFC drivers; need to compare FSUIPC and XUIPC -&gt; specifically, check if the later depends on the former, and whether it is required. Nonetheless, download all DLL as a precaution.</p>
+<p>Hardware was working before, so plug in old HDDs and browse for relevant files. Copy Custom Maps into X-Plane, copy PFCTest software to manage COM port. Suspect ignition issue at hardware level related to this or mismatch of hardware inputs and <code>datarefs</code> assignment.</p>
+<h3>Testing network communication</h3>
+<p>Install X-Plane 11 on Arch Linux to set up instructor station. Concerns: OS incompatibility.</p>
+<h3>Running on Linux</h3>
+<p>Installer fails due to missing <code>libGLU.so.1</code>. Name is apparently outdated, and often just a symlink for <code>glu</code>. To install, <code>yay -S glu</code>; after a .14 MiB download, X-Plane installer runs.</p>
+<h2>April 20th, 2022</h2>
+<p>After installing X-Plane on both computers and plugging all hardware in, including the PFC MDF, started up X-Plane.</p>
+<p>Initial notes: 
+1) computers were unable to send data to each other, 
+2) visual computer had trouble displaying all menus and a correct FOV, 
+3) flight model was completely out of whack (aircraft moving scholastically around space, in all directions).
+4) no scenery was visible (only water around runways), 
+5) Flight controls not working as expected:
+    1)  poor left roll control, 
+    2) excessive pitch sensitivity,
+    3) starters seem to be on at all times
+    4) only pitch control when battery is off</p>
+<p>Solutions:</p>
+<p>1) Reset networking configuration on both visual and master computers. Ensure roles are specified, and lock view on visual computer to master. If needed, add IP address and ensure Wi-Fi is off.</p>
+<p>2) On external visuals computer, adjust settings to include every monitor (need to scroll all the way down for horizontal slider). Set each monitor to "default resolution for this monitor" and select option for displaying external views only (no panel). Set FOV to required value - this can be done experimentally - a FOV of 45 degrees mean the side monitors still seemed to be looking forward. Adjust with lateral offset views on same menu.
+3) Ensure correct aircraft model is loaded on both computers. Aircraft models are located in <code>$ ../X-Plane/Aircraft</code>.
+4) Global scenery is available with the purchase of a professional license. Alternatively, it is possible to download specific geographic areas under Custom Areas - untested.
+5) Calibrate controls under settings, User Profiles:
+    1) Set each axis to center, min, and max
+    2) Adjust pitch, roll, and yaw rate sliders and acceleration profiles
+    3) According to various X-Plane forum posts, XP11 is incompatible with serial port connections. It does appear that there is poor support for COM-connected controls, given the lack of settings and auto-discovery options (see 1 and 2 for small fixes)</p>
+<h2>May 19, 2022</h2>
+<p>Using Elite Datarefs plugin was inconclusive. Suspect the plugin is designed for a COM panel but does not address the use of yoke/rudder pedal combinations.</p>
+<p>Using the Precision Flight Controls testing software we were able to ascertain which signals are being delivered to the computer under different conditions:</p>
+<p>1) At all times the left ignition/mag switch is inop. The right ign/mag seems to deliver information to the master computer, although it maintains a state of Start L+R at all times
+2) The left brake was unable to be fined tuned: functioned as an on/off switch rather than having access to a spectrum of values.
+3) The yoke and rudder pedals worked normally, except when the battery switch was turned off. In that scenario, no data was received by master computer - explains why with battery of in flight we lost all roll and yaw control. Suspect improper connection set up or hardware fault.</p>
+<h3>Specific fixes for 5.3 above</h3>
+<p>According to the XP11 desktop manual, a serial port can be set up by adjusting Dataref Read/Write parameters:</p>
+<div class="highlight"><pre><span></span><code><span class="err">###</span><span class="w"> </span><span class="nx">Serial</span><span class="w"> </span><span class="nx">Port</span><span class="w"> </span><span class="nx">Flight</span><span class="w"> </span><span class="nx">Instruments</span><span class="w"> </span><span class="nx">Set</span><span class="w"> </span><span class="nx">Up</span>
+
+<span class="nx">If</span><span class="w"> </span><span class="nx">you</span><span class="w"> </span><span class="nx">have</span><span class="w"> </span><span class="nx">flight</span><span class="w"> </span><span class="nx">instruments</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="nx">other</span><span class="w"> </span><span class="nx">hardware</span><span class="w"> </span><span class="nx">you</span><span class="w"> </span><span class="nx">plug</span><span class="w"> </span><span class="nx">into</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">serial</span><span class="w"> </span><span class="nx">port</span><span class="p">,</span><span class="w"> </span><span class="nx">you</span><span class="w"> </span><span class="nx">can</span><span class="w"> </span><span class="nx">send</span><span class="w"> </span><span class="nx">datarefs</span><span class="w"> </span><span class="nx">from</span><span class="w"> </span><span class="nx">X</span><span class="err">‑</span><span class="nx">Plane</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">serial</span><span class="w"> </span><span class="nx">port</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">drive</span><span class="w"> </span><span class="nx">them</span><span class="p">.</span><span class="w"> </span><span class="nx">To</span><span class="w"> </span><span class="nx">do</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">first</span><span class="w"> </span><span class="nx">go</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">Data</span><span class="w"> </span><span class="nx">Output</span><span class="w"> </span><span class="nx">section</span><span class="w"> </span><span class="nx">of</span><span class="w"> </span><span class="nx">Settings</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="nx">click</span><span class="w"> </span><span class="nx">on</span><span class="w"> </span><span class="o">**</span><span class="nx">Dataref</span><span class="w"> </span><span class="nx">Read</span><span class="o">/</span><span class="nx">Write</span><span class="o">**</span><span class="p">.</span><span class="w"> </span><span class="nx">Check</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">box</span><span class="w"> </span><span class="nx">next</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="o">**</span><span class="nx">A</span><span class="w"> </span><span class="nx">COM</span><span class="w"> </span><span class="nx">port</span><span class="o">**</span><span class="p">,</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="nx">select</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">com</span><span class="o">-</span><span class="nx">port</span><span class="w"> </span><span class="nx">number</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="nx">enter</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">baud</span><span class="w"> </span><span class="nx">rate</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">lower</span><span class="o">-</span><span class="nx">right</span><span class="p">.</span>
+
+<span class="nx">Now</span><span class="w"> </span><span class="nx">you</span><span class="w"> </span><span class="nx">can</span><span class="w"> </span><span class="nx">choose</span><span class="w"> </span><span class="nx">any</span><span class="w"> </span><span class="nx">number</span><span class="w"> </span><span class="nx">of</span><span class="w"> </span><span class="nx">datarefs</span><span class="w"> </span><span class="nx">from</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">list</span><span class="w"> </span><span class="nx">on</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">left</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">write</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="nx">read</span><span class="w"> </span><span class="nx">from</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">serial</span><span class="w"> </span><span class="nx">port</span><span class="p">.</span><span class="w"> </span><span class="nx">They</span><span class="w"> </span><span class="nx">will</span><span class="w"> </span><span class="nx">show</span><span class="w"> </span><span class="nx">up</span><span class="w"> </span><span class="nx">on</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">right</span><span class="p">.</span><span class="w"> </span><span class="nx">If</span><span class="w"> </span><span class="nx">you</span><span class="w"> </span><span class="nx">selected</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">dataref</span><span class="w"> </span><span class="nx">that</span><span class="w"> </span><span class="nx">contains</span><span class="w"> </span><span class="nx">an</span><span class="w"> </span><span class="nx">_array_</span><span class="w"> </span><span class="nx">of</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="p">(</span><span class="k">like</span><span class="w"> </span><span class="nx">sim</span><span class="o">/</span><span class="nx">cockpit</span><span class="o">/</span><span class="nx">engine</span><span class="o">/</span><span class="nx">fuel_pump_on</span><span class="p">,</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">example</span><span class="p">),</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="nx">you</span><span class="w"> </span><span class="nx">simply</span><span class="w"> </span><span class="nx">select</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">array</span><span class="w"> </span><span class="nx">index</span><span class="w"> </span><span class="nx">you</span><span class="w"> </span><span class="nx">want</span><span class="w"> </span><span class="nx">from</span><span class="w"> </span><span class="nx">the</span><span class="w"> </span><span class="nx">field</span><span class="w"> </span><span class="nx">there</span><span class="p">.</span>
+
+<span class="nx">Source</span><span class="p">:</span><span class="w"> </span><span class="nx">https</span><span class="p">:</span><span class="c1">//x-plane.com/manuals/desktop/index.html#configuringflightcontrols</span>
+</code></pre></div>
+
+<p>Some people in forums have suggested using HID drivers; however, these appear to be geared towards serial to USB adaptor set ups.</p>
+<div class="highlight"><pre><span></span><code><span class="n">Have</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">downloaded</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">XPUIPC</span><span class="w"> </span><span class="n">plugin</span><span class="w"> </span><span class="p">(</span><span class="n">equivalent</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">FSUIPC</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">put</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">your</span><span class="w"> </span><span class="n">resources</span><span class="o">/</span><span class="n">plugins</span><span class="w"> </span><span class="n">folder</span><span class="err">?</span><span class="w"> </span><span class="n">With</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">every</span><span class="w"> </span><span class="n">button</span><span class="o">/</span><span class="n">switch</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">automatically</span><span class="w"> </span><span class="n">recognised</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">C2</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">aircraft</span><span class="w"> </span><span class="n">has</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">button</span><span class="o">/</span><span class="n">switch</span><span class="o">.</span>
+</code></pre></div>
+
+<p>Can also test using PFC serial test utilities and other legacy software: https://flypfc.com/legacy/</p>
+<p>https://flypfc.com/wp-content/uploads/support/Set_Up_Guide_Serial_Avionics_XPlane9.pdf</p>
+<p>https://flypfc.com/wp-content/uploads/support/Serial_CATIII_%20and_X-Plane_9_%20Setup_Guide.pdf</p>
+<h2>Other resources</h2>
+<p><a href="https://x-plane.com/manuals/desktop/index.html#calibratingthehardware">X-Plane 11 Manual</a>
+<a href="https://questions.x-plane.com/1806/serial-throttle-quadrant-converter-require-special-driver">Discussion on drivers for serial controls</a>
+<a href="https://www.avsim.com/forums/topic/501181-problem-calibrating-usb-pfc-controls-in-x-plane-10/">Calibration issues with serial ports</a>
+<a href="https://forums.x-plane.org/index.php?/forums/topic/111166-serial-port-to-usb-pfc/&amp;page=2">Converting serial port to USB for XP11</a>
+<a href="https://flypfc.com/wp-content/uploads/support/Serial_CATIII_%20and_X-Plane_9_%20Setup_Guide.pdf">Avionics stack set up for XP9</a></p>
+    <footer>
+      <p>Published: <time datetime="2022-04-19T00:00:00-07:00">
+        Tue 19 April 2022
+      </time></p>
+        <p>Last updated: <time datetime="2024-10-16T23:34:42.484844-07:00">
+          Wed 16 October 2024
+        </time></p>
+        <address>
+          By             <a href="./">Adnan Valdes</a>
+        </address>
+        <p>
+          Category: <a href="./category/blog.html">blog</a>
+        </p>
+        <p>
+          Tags:
+            <a href="./tag/cs.html">cs</a>
+            <a href="./tag/programming.html">programming</a>
+            <a href="./tag/work.html">work</a>
+        </p>
+    </footer>
+  </article>
+  </main>
+  <footer>
+    <nav class="nav">
+      <ul class="nav__ul">
+        ||
+          <li>
+            <a href="https://adnanvaldes.pages.dev">Home</a>
+          </li>
+        ||
+          <li>
+            <a href="feeds/atom.xml">RSS</a>
+          </li>
+        ||
+          <li>
+            <a href="resume.html">Resume</a>
+          </li>
+        ||
+          <li>
+            <a href="archives.html">Archive</a>
+          </li>
+        ||
+      </ul>
+    </nav>
+  </footer>
+  </body>
+</html>

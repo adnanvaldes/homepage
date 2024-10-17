@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+      <head>
+      <title>Adnan</title>
+      <meta name="charset" charset="utf-8" />
+      <meta name="generator" content="Pelican"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="./theme/css/rdark.css" />
+	    <link rel="stylesheet" type="text/css" href="./theme/css/main.css" />
+      <link href="./" type="application/atom+xml" rel="alternate" title="Adnan Valdes ATOM Feed" />
+        <link href="https://adnanvaldes.pages.dev/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Adnan Valdes Full Atom Feed" />
+        <link href="https://adnanvaldes.pages.dev/feeds/feed.rss" type="application/rss+xml" rel="alternate" title="Adnan Valdes Full RSS Feed" />
+    </head>
+
+
+
+
+    <meta name="tags" content="gamedev" />
+    <meta name="tags" content="cs" />
+    <meta name="tags" content="programming" />
+
+  <body>
+    <nav class="nav">
+      <ul class="nav__ul">
+        ||
+          <li>
+            <a href="https://adnanvaldes.pages.dev">Home</a>
+          </li>
+        ||
+          <li>
+            <a href="feeds/atom.xml">RSS</a>
+          </li>
+        ||
+          <li>
+            <a href="resume.html">Resume</a>
+          </li>
+        ||
+          <li>
+            <a href="archives.html">Archive</a>
+          </li>
+        ||
+      </ul>
+    </nav>
+    <header class="header">
+      <h1 class="header__h1">
+        <a href="./">Adnan Valdes</a>
+      </h1>
+  </header>
+  <main>
+  <article>
+    <header>
+      <h2>
+        <a href="./202212231346.html" rel="bookmark"
+           title="Permalink to Pong - The AI Update">Pong - The AI Update</a></h2>
+      
+    </header>
+    <p>The first lecture on <a href="https://cs50.harvard.edu/games/2018/">CS50's introduction to game development</a> is about creating a small Pong game using <a href="https://love2d.org/">Love2D</a>.  While the video runs you through the basics of <a href="https://www.lua.org/">Lua</a> and a step-by -step process of creating a Pong game from scratch, the post-lecture assignment is where things get a bit more interesting.</p>
+<p>What I like the most about these projects, though, is the ability to continue extending them as one pleases. I was able to complete the task (in an exceedingly crude manner) of adding computer controlled movement to one of the paddles in about 5 min. But to do it well took much longer (and by well I mean it's acceptable but still horribly jittery!). I also added a few touches that I thought were kinda fun.</p>
+<h2>AI Update</h2>
+<p>The first problem I tackled was the one directly stated in the project: to create an AI-controlled paddle. Like I said above, my first solution was horrible crude, but <em>technically</em> it worked:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- In love.update(dt) function</span>
+<span class="n">player2</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">ball</span><span class="p">.</span><span class="n">y</span>
+</code></pre></div>
+
+<p>Of course, simply setting the right paddle's <code>y</code> value equal to the ball's is not very interesting (and also makes the game impossible to win). This also doesn't account for the fact that the ball's velocity increases with every bounce, while the paddle's should maintain a constant speed to make the game more challenging.</p>
+<p>To solve this, I made ample use of conditionals. The idea is to check whether the ball is above or bellow the paddle and then to move that paddle accordingly. I also added a small check so only move the right paddle if the ball is going towards it, since the ball's direction is always random after being deflected:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- In love.update(dt) function</span>
+<span class="kr">if</span> <span class="n">ball</span><span class="p">.</span><span class="n">dx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="kr">if</span> <span class="n">ball</span><span class="p">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">player2</span><span class="p">.</span><span class="n">y</span> <span class="kr">then</span>
+        <span class="n">player2</span><span class="p">.</span><span class="n">dy</span> <span class="o">=</span> <span class="n">PADDLE_SPEED</span>
+    <span class="kr">elseif</span> <span class="n">ball</span><span class="p">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">player2</span><span class="p">.</span><span class="n">y</span> <span class="kr">then</span>
+        <span class="n">player2</span><span class="p">.</span><span class="n">dy</span> <span class="o">=</span> <span class="o">-</span><span class="n">PADDLE_SPEED</span>
+    <span class="kr">else</span>
+        <span class="n">player2</span><span class="p">.</span><span class="n">dy</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="kr">end</span>
+<span class="kr">end</span>     
+</code></pre></div>
+
+<p>This worked much better and gave Player 1 a chance to win. But the AI-controlled paddle was horrible jittery: it tried to update it's position constantly such that the centre of the paddle would always try to match the centre of the ball. I tried some far too complicated solutions - such as trying to implement a low-pass filter to smooth out the paddle's movement - but ultimate decided that simply modifying the conditionals to include a buffer would be enough. </p>
+<p>Because <code>PADDLE_SPEED</code> is constant, the paddle itself displays an acceptable level of jitter when the game starts, but as the ball speeds up the paddle's movement looks smoother and smoother:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- In love.update(dt) function</span>
+<span class="kr">if</span> <span class="n">ball</span><span class="p">.</span><span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="kr">if</span> <span class="p">(</span><span class="n">ball</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">ball</span><span class="p">.</span><span class="n">height</span><span class="p">)</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">player2</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="mi">5</span><span class="p">)</span> <span class="kr">then</span>
+        <span class="n">player2</span><span class="p">.</span><span class="n">dy</span> <span class="o">=</span> <span class="n">PADDLE_SPEED</span>
+    <span class="kr">elseif</span> <span class="p">(</span><span class="n">ball</span><span class="p">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">ball</span><span class="p">.</span><span class="n">height</span><span class="p">)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">player2</span><span class="p">.</span><span class="n">y</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span> <span class="kr">then</span>
+        <span class="n">player2</span><span class="p">.</span><span class="n">dy</span> <span class="o">=</span> <span class="o">-</span><span class="n">PADDLE_SPEED</span>
+    <span class="kr">else</span>
+        <span class="n">player2</span><span class="p">.</span><span class="n">dy</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="kr">end</span>
+<span class="kr">end</span>
+</code></pre></div>
+
+<h2>PVP Update</h2>
+<p>The second feature I wanted to add was the ability for a human player to join at any point - much like in fighting arcade games, where the option for a player to jump in was always available. As part of adding this functionality I was also able to include the option for a human player to take <em>either</em> paddle, rather than always playing as Player 1.</p>
+<p>The result is that the game can be run with one, two, or nil players.</p>
+<p>For this to work I added an empty <code>players</code> table to <code>love.load()</code> function. When the game runs, a conditional looks through the <code>players</code> table to see if it finds  <code>player1</code>. If it doesn't, the left paddle continues to be controlled automatically. This check happens every single frame. If at any time the the <code>w</code> or <code>s</code> keys are pressed, then <code>player1</code> is added to the <code>players</code> table and the computer surrenders control of the left paddle on the following frame. The functionality works exactly the same for player 2.</p>
+<p>Whenever either player reaches 10 points, the <code>players</code> table is reset to empty, thereby allowing a follow-up game to be played again between AI, PVE, or PVP.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- In love.update(dt) function</span>
+<span class="kr">if</span> <span class="ow">not</span> <span class="nb">string.find</span><span class="p">(</span><span class="nb">table.concat</span><span class="p">(</span><span class="n">players</span><span class="p">),</span> <span class="s1">&#39;player2&#39;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="kr">if</span> <span class="n">ball</span><span class="p">.</span><span class="n">dx</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="kr">then</span>
+        <span class="kr">if</span> <span class="p">(</span><span class="n">ball</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">ball</span><span class="p">.</span><span class="n">height</span><span class="p">)</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">player2</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="mi">5</span><span class="p">)</span> <span class="kr">then</span>
+            <span class="n">player2</span><span class="p">.</span><span class="n">dy</span> <span class="o">=</span> <span class="n">PADDLE_SPEED</span>
+        <span class="kr">elseif</span> <span class="p">(</span><span class="n">ball</span><span class="p">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">ball</span><span class="p">.</span><span class="n">height</span><span class="p">)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">player2</span><span class="p">.</span><span class="n">y</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span> <span class="kr">then</span>
+            <span class="n">player2</span><span class="p">.</span><span class="n">dy</span> <span class="o">=</span> <span class="o">-</span><span class="n">PADDLE_SPEED</span>
+        <span class="kr">else</span>
+            <span class="n">player2</span><span class="p">.</span><span class="n">dy</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="kr">end</span>
+    <span class="kr">end</span>
+<span class="kr">end</span>
+</code></pre></div>
+
+<p>Given that I already have a table which tracks players that join, it was fairly trivial to implement a small <code>Ready Player 1</code> or <code>Ready Player 2</code> message on the top of the screen. The logic is to use the <code>players</code> table and display an invitation for any player <em>not</em> in the table to join:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- in playerJoin()</span>
+<span class="kr">if</span> <span class="ow">not</span> <span class="nb">string.find</span><span class="p">(</span><span class="nb">table.concat</span><span class="p">(</span><span class="n">players</span><span class="p">),</span> <span class="s1">&#39;player2&#39;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="n">love</span><span class="p">.</span><span class="n">graphics</span><span class="p">.</span><span class="n">printf</span><span class="p">(</span><span class="s1">&#39;Ready Player 2&#39;</span><span class="p">,</span> 
+                          <span class="mi">0</span><span class="p">,</span> 
+                          <span class="mi">10</span><span class="p">,</span> 
+                          <span class="n">VIRTUAL_WIDTH</span> <span class="o">+</span> <span class="p">(</span><span class="n">VIRTUAL_WIDTH</span><span class="o">=</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> 
+                          <span class="s1">&#39;center&#39;</span><span class="p">)</span>
+<span class="kr">end</span>
+</code></pre></div>
+
+<p>The trickiest part here was to make sure that the message wasn't just solid text at the top of the screen. I wanted the text to flash slowly as the game continues, like it does in arcade games. My first idea was to change the opacity of the text on every frame, but that would mean changing it, for example, 60 times per second!</p>
+<p>What I did instead was to initialise two variables, <code>timer</code> and <code>alpha</code> at <code>love.load()</code>. Then, in <code>love.update(dt)</code>, I used a conditional that checks whether 0.75 seconds have passed since <code>alpha</code> was last updated.  If true, then <code>alpha</code> is set to <code>alpha = 1 - alpha</code>, effectively changing it's value between 0 and 1 every 0.75 seconds. </p>
+<p>Then it's simply a matter of including <code>playerJoin()</code> in the <code>love.draw()</code> function:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">()</span>
+    <span class="p">...</span>
+    <span class="p">...</span>
+    <span class="n">timer</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+    <span class="p">...</span>
+    <span class="p">...</span>
+    <span class="n">timer</span> <span class="o">=</span> <span class="n">timer</span> <span class="o">+</span> <span class="n">dt</span>
+    <span class="kr">if</span> <span class="n">timer</span> <span class="o">&gt;</span> <span class="mf">.75</span> <span class="kr">then</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span>
+        <span class="n">timer</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span>
+    <span class="p">...</span>
+    <span class="p">...</span>
+    <span class="n">playerJoin</span><span class="p">()</span>
+    <span class="p">...</span>
+    <span class="p">...</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nf">playerJoin</span><span class="p">()</span>
+    <span class="n">love</span><span class="p">.</span><span class="n">graphics</span><span class="p">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">smallFont</span><span class="p">)</span>
+    <span class="n">love</span><span class="p">.</span><span class="n">graphics</span><span class="p">.</span><span class="n">setColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+    <span class="kr">if</span> <span class="ow">not</span> <span class="nb">string.find</span><span class="p">(</span><span class="nb">table.concat</span><span class="p">(</span><span class="n">players</span><span class="p">),</span> <span class="s1">&#39;player2&#39;</span><span class="p">)</span> <span class="kr">then</span>
+        <span class="n">love</span><span class="p">.</span><span class="n">graphics</span><span class="p">.</span><span class="n">printf</span><span class="p">(</span><span class="s1">&#39;Ready Player 2&#39;</span><span class="p">,</span> 
+                              <span class="mi">0</span><span class="p">,</span> 
+                              <span class="mi">10</span><span class="p">,</span> 
+                              <span class="n">VIRTUAL_WIDTH</span> <span class="o">+</span> <span class="p">(</span><span class="n">VIRTUAL_WIDTH</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> 
+                              <span class="s1">&#39;center&#39;</span><span class="p">)</span>
+    <span class="kr">end</span>
+    <span class="kr">if</span> <span class="ow">not</span> <span class="nb">string.find</span><span class="p">(</span><span class="nb">table.concat</span><span class="p">(</span><span class="n">players</span><span class="p">),</span> <span class="s1">&#39;player1&#39;</span><span class="p">)</span> <span class="kr">then</span>
+        <span class="n">love</span><span class="p">.</span><span class="n">graphics</span><span class="p">.</span><span class="n">printf</span><span class="p">(</span><span class="s1">&#39;Ready Player 1&#39;</span><span class="p">,</span> 
+                              <span class="mi">0</span><span class="p">,</span> 
+                              <span class="mi">10</span><span class="p">,</span> 
+                              <span class="n">VIRTUAL_WIDTH</span> <span class="o">-</span> <span class="p">(</span><span class="n">VIRTUAL_WIDTH</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> 
+                              <span class="s1">&#39;center&#39;</span><span class="p">)</span>
+    <span class="kr">end</span>
+<span class="kr">end</span>
+</code></pre></div>
+
+<h2>Future Update</h2>
+<p>The result is a charming little game that is quite fun to play, but not particularly complex. I more have ideas that I want to implement here: boosters, powers, more balls, different game modes etc. But rather than do that now, I'd rather move on to Flappy Bird and once I have a better idea of how things work in Love2D come back to this.</p>
+    <footer>
+      <p>Published: <time datetime="2022-12-23T00:00:00-08:00">
+        Fri 23 December 2022
+      </time></p>
+        <p>Last updated: <time datetime="2024-10-04T23:08:49.065296-07:00">
+          Fri 04 October 2024
+        </time></p>
+        <address>
+          By             <a href="./">Adnan Valdes</a>
+        </address>
+        <p>
+          Category: <a href="./category/blog.html">blog</a>
+        </p>
+        <p>
+          Tags:
+            <a href="./tag/gamedev.html">gamedev</a>
+            <a href="./tag/cs.html">cs</a>
+            <a href="./tag/programming.html">programming</a>
+        </p>
+    </footer>
+  </article>
+  </main>
+  <footer>
+    <nav class="nav">
+      <ul class="nav__ul">
+        ||
+          <li>
+            <a href="https://adnanvaldes.pages.dev">Home</a>
+          </li>
+        ||
+          <li>
+            <a href="feeds/atom.xml">RSS</a>
+          </li>
+        ||
+          <li>
+            <a href="resume.html">Resume</a>
+          </li>
+        ||
+          <li>
+            <a href="archives.html">Archive</a>
+          </li>
+        ||
+      </ul>
+    </nav>
+  </footer>
+  </body>
+</html>
