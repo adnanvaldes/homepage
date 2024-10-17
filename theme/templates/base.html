@@ -2,7 +2,7 @@
 <html lang="{% block html_lang %}{{ DEFAULT_LANG }}{% endblock html_lang %}">
     {% block head %}
     <head>
-      <title>Adnan</title>
+      <title>Adnan Valdes</title>
       <meta name="charset" charset="utf-8" />
       <meta name="generator" content="Pelican"/>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,21 +27,20 @@
     </head>
     {% endblock head %}
   <body>
-    <nav class="nav">
-      <ul class="nav__ul">
-        {% for title, link in MENUITEMS %}
-        [
-          <li>
-            <a href="{{ link }}">{{ title }}</a>
-          </li>
-        ]
-        {% endfor %}
-      </ul>
-    </nav>
     <header class="header">
-      <h1 class="header__h1">
-        <a href="{{ SITEURL }}/">{{ SITENAME }}</a>
-      </h1>
+      <nav class="nav">
+        <ul class="nav__ul">
+          {% for title, link in MENUITEMS %}
+          [
+            <li>
+              <a href="{{ link }}" target="_blank">{{ title }}</a>
+            </li>
+          ]
+          {% endfor %}
+        </ul>
+      </nav>
+      {% block sitename %}
+      {% endblock %}
   </header>
   <main>
     {% block content %}

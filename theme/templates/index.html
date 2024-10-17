@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
-<!-- {% block title %}Index{% endblock %} -->
+{% block title %}Index{% endblock %}
 
+{% block sitename %}
+{% endblock %}
 {% block content %}
 {% for article in articles_page.object_list %}
 <h2 class="main__h2"><a href="/{{ article.slug }}.html">{{ article.title }}</a></h1>

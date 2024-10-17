@@ -23,7 +23,9 @@
   --BGCOLOR: #1d1f21;
   --FONT-COLOR: #C9CACC;
 
-
+  /* MARGINS */
+  --MARGIN-TB: auto;
+  --MARGIN-SIDES: auto;
 }
 
 
@@ -37,14 +39,13 @@ body {
   background-color: var(--BGCOLOR);
   color: var(--FONT-COLOR);
   display: block;
-
+  margin: var(--MARGIN-TB) var(--MARGIN-SIDES);
 }
 
 a:any-link {
   color: var(--FONT-COLOR);
-  text-decoration: underline;
+  text-decoration: none;
 }
-
 /* || NAV */
 
 .nav {
@@ -61,6 +62,11 @@ a:any-link {
   font-size: var(--FS-SMALL);
 }
 
+.nav__ul a:any-link {
+  color: var(--FONT-COLOR);
+  text-decoration: underline;
+}
+
 .nav__img {
   display: block;
   max-width: 100%;
@@ -69,7 +75,15 @@ a:any-link {
   cursor: pointer;
 }
 
+
+
 /* || HEADER */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  /* margin: var(--MARGIN); */
+}
 
 
 
