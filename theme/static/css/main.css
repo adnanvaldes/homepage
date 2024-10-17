@@ -16,11 +16,14 @@
   /* FONTS */
   --FF: monospace;
   --FS: 1rem;
+  --ICON-SIZE: 20px;
 
 
   /* COLORS */
   --BGCOLOR: #1d1f21;
   --FONT-COLOR: #C9CACC;
+
+
 }
 
 
@@ -39,23 +42,31 @@ body {
 
 a:any-link {
   color: var(--FONT-COLOR);
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 /* || NAV */
 
 .nav {
-  display: inline-block;
+  display: flex;
   padding: 1em;
 }
 
 .nav__ul {
   display: flex;
-  flex-wrap: inherit;
+  flex-wrap: flex;
   justify-content: space-around;
-  gap: 2em; 
+  gap: 0.5em; 
   list-style-type: none;
   font-size: var(--FS-SMALL);
+}
+
+.nav__img {
+  display: block;
+  max-width: 100%;
+  width: var(--ICON-SIZE);
+  height: var(--ICON-SIZE);
+  cursor: pointer;
 }
 
 /* || HEADER */

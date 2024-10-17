@@ -29,12 +29,12 @@
   <body>
     <nav class="nav">
       <ul class="nav__ul">
-        ||
         {% for title, link in MENUITEMS %}
+        [
           <li>
             <a href="{{ link }}">{{ title }}</a>
           </li>
-        ||
+        ]
         {% endfor %}
       </ul>
     </nav>
@@ -50,13 +50,19 @@
   <footer>
     <nav class="nav">
       <ul class="nav__ul">
-        ||
-        {% for title, link in MENUITEMS %}
-          <li>
-            <a href="{{ link }}">{{ title }}</a>
-          </li>
-        ||
-        {% endfor %}
+        [
+        <li>
+          <a href="mailto:adnan@av-b.net" target="_blank">Email</a>
+        </li>
+        ][
+        <li>
+          <a href="https://github.com/adnanvaldes" target="_blank">Github</a>
+        </li>
+        ][
+        <li>
+          <a href="https://www.linkedin.com/in/adnanvaldes/" target="_blank">LinkedIn</a>
+        </li>
+        ]
       </ul>
     </nav>
   </footer>
