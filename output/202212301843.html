@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+      <head>
+      <title>Adnan</title>
+      <meta name="charset" charset="utf-8" />
+      <meta name="generator" content="Pelican"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="./theme/css/rdark.css" />
+	    <link rel="stylesheet" type="text/css" href="./theme/css/main.css" />
+      <link href="./" type="application/atom+xml" rel="alternate" title="Adnan Valdes ATOM Feed" />
+        <link href="https://adnanvaldes.pages.dev/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Adnan Valdes Full Atom Feed" />
+        <link href="https://adnanvaldes.pages.dev/feeds/feed.rss" type="application/rss+xml" rel="alternate" title="Adnan Valdes Full RSS Feed" />
+    </head>
+
+
+
+
+    <meta name="tags" content="sysadmin" />
+
+  <body>
+    <nav class="nav">
+      <ul class="nav__ul">
+        ||
+          <li>
+            <a href="https://adnanvaldes.pages.dev">Home</a>
+          </li>
+        ||
+          <li>
+            <a href="feeds/atom.xml">RSS</a>
+          </li>
+        ||
+          <li>
+            <a href="resume.html">Resume</a>
+          </li>
+        ||
+          <li>
+            <a href="archives.html">Archive</a>
+          </li>
+        ||
+      </ul>
+    </nav>
+    <header class="header">
+      <h1 class="header__h1">
+        <a href="./">Adnan Valdes</a>
+      </h1>
+  </header>
+  <main>
+  <article>
+    <header>
+      <h2>
+        <a href="./202212301843.html" rel="bookmark"
+           title="Permalink to State of the Servers">State of the Servers</a></h2>
+      
+    </header>
+    <p>As the year comes to a close I have 4.5 servers online, with another that is  yet to be built (mostly due to laziness).</p>
+<h3>Trantor</h3>
+<p>My primary server, known as Trantor, has been online for just over a year. Until I build my last server, Trantor is the machine around which the rest of my network is built. It's main purpose is to serve files with NFS to my desktop, though it also runs all my other services (see below) inside VMs managed  by <a href="https://www.proxmox.com/en/">Proxmox</a>. </p>
+<p>It is an older set up, that so far has really reinforced in me the idea of giving old hardware a new life. The CPU is a 4th gen Intel that I inherited from a friend who isn't all that much into computers and wanted help upgrading his set up. This is paired with 24 GB RAM and two 4 TB SMR Western Digital Red HDDs.</p>
+<h3>Anacreon</h3>
+<p>The second server I have is called Anacreon. It's a small Lenovo ThinkCentre with an i5-7500T CPU and also 24 GB RAM. The original idea for this server was to use it for all my VMs and services, leaving Trantor entirely as a file server. However, I decided to upgrade my desktop with a new CPU and a smaller case, which gave me enough spare parts to build a 3rd server. </p>
+<p>As a result, Anacreon's job will eventually be to mostly act as an arbiter and another node in a Proxmox High Availability cluster. I probably have zero need for something like this, but I relish the idea of being to unplug any of my computers and still have access to at least a portion of the things I run.</p>
+<h3>RPis</h3>
+<p>When I said I have 4.5 servers online I meant both Trantor and Anacreon as well as two Raspberry Pi 4s and a single Raspberry Pi Zero (the latter counts as a 0.5, I think!). </p>
+<p>As of now, one of my Pi4s is running a matrix server that I set up as an experiment. It doesn't really do much else, and once my Proxmox cluster is up I intend to move the matrix services into their own VM (the thought being that if I get all my friends into Matrix, I want to guarantee as much as I can that the service will be running).</p>
+<p>The second Pi4 is my "network Pi". It sits right on top of my router and uses Pi-Hole and PiVPN to provide ad-blocking, DHCP, and wireguard services. Ideally this Pi should become obsolete when I finally acquire a machine capable of running <a href="https://www.pfsense.org/">pfSense</a> for for now this is what I have.</p>
+<p>The last Pi, my Pi Zero, is possibly the most under powered machine I have, yet possibly the one with the greatest up-time of them all. It's entire life is dedicated to an ADS-B antenna I plugged into it and to feeding that data into <a href="https://flightaware.com/adsb/piaware/">Flight Aware </a>. It was a fun little project I did when I started to explore playing with computers and, given my profession, has been invaluable given the free Enterprise account ADS-B feeders receive from Flight Aware. </p>
+<h2>Applications</h2>
+<p>When I first migrated to Trantor (from an old laptop) I was really getting into Docker and deploying a lot of applications. This has slowed down significantly as I have reached a point where starting up a new Docker container in itself isn't that interesting anymore, and most of my applications have been fairly stable so far.</p>
+<p>This is it not to say I don't have some changes planned nor that I won't deploy new stuff; indeed, this year I want to re-think how and where I run my services, as well as replace some.</p>
+<p>Docker is the backbone of the things in my network, since most things are deployed as containers. My installation of Docker runs inside a Debian LXC container managed by Proxmox. Although I have seen some concerns online about nested virtualisation, this set up works really well for me (and I don't have any need to GPU pass-through into any of my containers - in fact the only place where I do GPU pass-through is to a dedicated Jellyfin LXC).</p>
+<ul>
+<li><a href="https://www.audiobookshelf.org/">Audiobookshelf</a> - Audiobook and podcast management, as well as ebook repository</li>
+<li><a href="https://calibre-ebook.com/">Calibre</a> - Ebook  management</li>
+<li><a href="https://gitea.io/en-us/">Gitea</a> - Git repository</li>
+<li><a href="https://invidious.io/">Invidious</a> - YouTube front-end</li>
+<li><a href="https://jellyfin.org/">Jellyfin</a> - Media streaming</li>
+<li><a href="https://github.com/juandjara/jellyseer">Jellyseer</a> - Media library management</li>
+<li><a href="https://jupyter.org/">Jupyter</a> - Mostly Python playground</li>
+<li><a href="https://github.com/libreddit/libreddit">Libreddit</a> - Reddit front-end</li>
+<li><a href="https://librespeed.org/">Librespeed</a> - Local network speed tests</li>
+<li><a href="https://lingva.ml/">Lingva</a> - Translation software</li>
+<li><a href="https://matrix.org/">Matrix | Synapse </a> - Communications server, Discord alternative</li>
+<li><a href="https://nextcloud.com/">Nextcloud</a> - File storage, recipe collection, RSS server</li>
+<li><a href="https://nginxproxymanager.com/">Nginx Proxy Manager</a> - Reverse proxy management</li>
+<li><a href="https://photoprism.app/">Photoprism</a> - Photo management and repository</li>
+<li><a href="https://flightaware.com/adsb/piaware/">PiAware</a> - ADS-B antenna</li>
+<li><a href="https://pi-hole.net/">PiHole</a> - DNS server and ad-blocker</li>
+<li><a href="https://www.portainer.io/">Portainer</a> - Docker management web host</li>
+<li><a href="https://www.snapraid.it/">SnapRAID</a> - Drive redundancy</li>
+<li><a href="https://github.com/RSS-Bridge/rss-bridge">RSS-bridge</a> - RSS server <a href="https://blog.terminus.earth/202208181152.html">for my Kindle</a></li>
+<li><a href="https://syncthing.net/">Syncthing</a> - File synchronisation</li>
+<li><a href="https://transmissionbt.com/">Transmission</a> - Online downloads</li>
+<li><a href="https://www.wireguard.com/">Wireguard</a> - Home network access</li>
+</ul>
+<p>One of the things I want to work on this year is changing some of these applications. For example, Nextcloud is a great piece of software, especially now that they added support for PHP 8 and thus runs considerably faster. But I don't particularly like the "all-in-one" philosophy, particularly when it is designed for collaboration and multiple users. I am the only person who uses it, and even then I only use a small subset of Nextcloud's features.</p>
+<p>Thus, rather than deploying a monolith with embedded applications, I want to run several separate applications that I can manage individually. Part of this is that I have already started replacing Nextcloud - rather than use it for file synchronisation, I am using Syncthing and I have not looked back at all.</p>
+<p>I also want to have a dedicated recipe management application, such as <a href="https://tandoor.dev/">Tandoor</a> - partly because I like the name, and partly because it does recipes much better than Nextcloud's cookbook can. Likewise for the News app; rather than Nextcloud's RSS server I want to use something like <a href="https://tt-rss.org/">TT-RSS</a>.</p>
+<p>Although not set in stone, in 2023 I will also move some of the more critical apps that I have into their own VMs. The idea is that once I have a HA Proxmox cluster I can ensure some more redundancy for these services, such as the Matrix server (which my friends use) and anything related to my network (PiHole and Wireguard), since I need them to be alive to use the internet.</p>
+<p>I also want to lower my dependency on GUIs that manage my configurations - especially those that, once set up, remain generally static or have few changes. I am talking about stuff like Nginx Proxy Manager, which I want to replace with pure Nginx, and Portainer, which I can replace with <a href="https://github.com/jesseduffield/lazydocker">lazydocker</a>.</p>
+<p>All in all there are quite a few changes I have planned for the year, although it is less a process of innovation and more a process of consolidation.</p>
+<p>admin.trantor.home.arpa:/mnt/storage/media/audiobooks      /root/audiobooks nfs soft,timeo=30 0 0
+admin.trantor.home.arpa:/mnt/storage/media/podcasts        /root/podcasts nfs soft,timeo=30 0 0
+admin.trantor.home.arpa:/mnt/storage/media/books           /root/books nfs soft,timeo=30 0 0
+admin.trantor.home.arpa:/mnt/storage/config/audiobookshelf /root/config nfs soft,timeo=30 0 0</p>
+<p>version: "3"
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      # These ports are in format <host-port>:<container-port>
+      - '80:80' # Public HTTP Port
+      - '443:443' # Public HTTPS Port
+      - '81:81' # Admin Web Port
+      # Add any other Stream port you want to expose
+      # - '21:21' # FTP</p>
+<div class="highlight"><pre><span></span><code><span class="gh">#</span> Uncomment the next line if you uncomment anything in the section
+<span class="gh">#</span> environment:
+  # Uncomment this if you want to change the location of 
+  # the SQLite DB file within the container
+  # DB_SQLITE_FILE: &quot;/data/database.sqlite&quot;
+
+  # Uncomment this if IPv6 is not enabled on your host
+  # DISABLE_IPV6: &#39;true&#39;
+
+volumes:
+  <span class="k">-</span> ./data:/data
+  <span class="k">-</span> ./letsencrypt:/etc/letsencrypt
+</code></pre></div>
+    <footer>
+      <p>Published: <time datetime="2022-12-30T00:00:00-08:00">
+        Fri 30 December 2022
+      </time></p>
+        <p>Last updated: <time datetime="2024-10-04T23:08:49.066296-07:00">
+          Fri 04 October 2024
+        </time></p>
+        <address>
+          By             <a href="./">Adnan Valdes</a>
+        </address>
+        <p>
+          Category: <a href="./category/blog.html">blog</a>
+        </p>
+        <p>
+          Tags:
+            <a href="./tag/sysadmin.html">sysadmin</a>
+        </p>
+    </footer>
+  </article>
+  </main>
+  <footer>
+    <nav class="nav">
+      <ul class="nav__ul">
+        ||
+          <li>
+            <a href="https://adnanvaldes.pages.dev">Home</a>
+          </li>
+        ||
+          <li>
+            <a href="feeds/atom.xml">RSS</a>
+          </li>
+        ||
+          <li>
+            <a href="resume.html">Resume</a>
+          </li>
+        ||
+          <li>
+            <a href="archives.html">Archive</a>
+          </li>
+        ||
+      </ul>
+    </nav>
+  </footer>
+  </body>
+</html>

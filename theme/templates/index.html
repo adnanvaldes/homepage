@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+<!-- {% block title %}Index{% endblock %} -->
+
+{% block content %}
+{% for article in articles_page.object_list %}
+<h2 class="main__h2"><a href="/{{ article.slug }}.html">{{ article.title }}</a></h1>
+    <span class="main__article-date">{{ article.date|strftime('%d %B %Y') }}</span>
+    {{ article.summary }}
+{% endfor %}
+
+<!-- Pagination -->
+<ul class="footer">
+{% if articles_previous_page %}
+    <li><a href="/{{ articles_previous_page.url }}" class="footer__pagination">Previous Page</a></li>
+{% else %}
+{% endif %}
+{% if articles_next_page %}
+    <li><a href="/{{ articles_next_page.url }}" class="footer__pagination">Next Page</a></li>
+{% else %}
+{% endif %}
+</ul>
+{% endblock %}

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+      <head>
+      <title>Adnan</title>
+      <meta name="charset" charset="utf-8" />
+      <meta name="generator" content="Pelican"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="./theme/css/rdark.css" />
+	    <link rel="stylesheet" type="text/css" href="./theme/css/main.css" />
+      <link href="./" type="application/atom+xml" rel="alternate" title="Adnan Valdes ATOM Feed" />
+        <link href="https://adnanvaldes.pages.dev/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Adnan Valdes Full Atom Feed" />
+        <link href="https://adnanvaldes.pages.dev/feeds/feed.rss" type="application/rss+xml" rel="alternate" title="Adnan Valdes Full RSS Feed" />
+    </head>
+
+
+
+
+    <meta name="tags" content="blog" />
+    <meta name="tags" content="writing" />
+
+  <body>
+    <nav class="nav">
+      <ul class="nav__ul">
+        ||
+          <li>
+            <a href="https://adnanvaldes.pages.dev">Home</a>
+          </li>
+        ||
+          <li>
+            <a href="feeds/atom.xml">RSS</a>
+          </li>
+        ||
+          <li>
+            <a href="resume.html">Resume</a>
+          </li>
+        ||
+          <li>
+            <a href="archives.html">Archive</a>
+          </li>
+        ||
+      </ul>
+    </nav>
+    <header class="header">
+      <h1 class="header__h1">
+        <a href="./">Adnan Valdes</a>
+      </h1>
+  </header>
+  <main>
+  <article>
+    <header>
+      <h2>
+        <a href="./202208181152.html" rel="bookmark"
+           title="Permalink to Consuming feeds">Consuming feeds</a></h2>
+      
+    </header>
+    <p>Until recently, I have been consuming RSS feeds by way of a self-hosted <a href="https://nextcloud.com/">Nextcloud</a> instance that delivers them to my phone. The problem is that using a mobile platform invariably leads to a more shallow reading experience - when scrolling through a large set of feeds it starts to feel more like a news aggregator site like Reddit and less like a curated feed (though I suppose it doesn't help that I subscribe to the front page of <a href="https://news.ycombinator.com">Hacker News</a>). I am far less likely to take notes or really remember what I read, and instead browsing these feeds turned into a time wasting activity more than anything. </p>
+<p>To combat this, I started subscribing to more and more individual blogs and long form journalism sites, such as <a href="https://www.theguardian.com/news/series/the-long-read">The Guardian Long Read</a> and <a href="https://longreads.com">Longreads</a>. I enjoy the format a lot more and it helps my feeds populate with non-technology commentary. What I don't like is mobile screens and computer monitors: I find these screens exhausting when trying to read for long periods of time, they have glare and, worse, they are incredibly distracting.</p>
+<p>The solution, of course, is to use an e-reader.</p>
+<p>The end goal of this little project was to have remote access to long form RSS feeds on my kindle without adding too much friction. To work within these constraints I could not rely on manual updates or on connecting my kindle to my desktop. I just wanted the feeds to <em>magically</em> appear on my kindle's library, ready to be read anywhere in the world.</p>
+<h4>Generating feeds</h4>
+<p>Many websites offer RSS feeds that are unfortunately truncated or deliver nothing but summaries with links to the appropriate website, if they offer RSS delivery at all. I find this distasteful as a matter of principle. More practically, however, it makes it far more difficult to read on the kindle - there is web browser that comes with the device, but it's not very well suited to load all the bloat that comes with many modern sites.</p>
+<p>Fortunately, I am not the only one with this issue. The good people at <a href="https://rss-bridge.github.io/rss-bridge/">RSS-Bridge</a> have created software that will generate both RSS and Atom feeds "for websites that don't have one". Or, as is my case, for websites that have poor feeds. To quote the RSS-Bridge repository:</p>
+<p><code>_Dear so-called "social" websites._</code></p>
+<p><code>Your catchword is "share", but you don't want us to share. You want to keep us within your walled gardens. That's why you've been removing RSS links from webpages, hiding them deep on your website, or removed feeds entirely, replacing it with crippled or demented proprietary API. **FUCK YOU.**</code></p>
+<p><code>You're not social when you hamper sharing by removing feeds. You're happy to have customers creating content for your ecosystem, but you don't want this content out - a content you do not even own. Google Takeout is just a gimmick. We want our data to flow, we want RSS or Atom feeds.</code></p>
+<p><code>We want to share with friends, using open protocols: RSS, Atom, XMPP, whatever. Because no one wants to have _your_ service with _your_ applications using _your_ API force-feeding them. Friends must be free to choose whatever software and service they want.</code></p>
+<p><code>We are rebuilding bridges you have willfully destroyed.</code></p>
+<p><code>Get your shit together: Put RSS/Atom back in.</code></p>
+<p>To get this working I deployed RSS-Bridge with Docker on my server. Although it runs well by default, the documentation is not very clear on how to configure specific services. Turns out that custom configurations must be placed in a <code>/config</code> folder - the same folder that can be mounted by the container itself.</p>
+<p>However, the directory is empty  when first deployed and I couldn't find any information on <em>where</em> the rest of the configuration files could be found. The RSS-Bridge documentation simply says that <code>A default configuration file ("config.default.ini.php") is shipped with RSS-Bridge.</code>  After digging around the container I noticed that all the relevant files were located at <code>/app</code> (I tried adding that folder as a mount point, but this just led to a host of errors  I don't care to repeat here). By simply copying and editing the relevant config files into  <code>/config</code>, RSS-Bridge was now set up.</p>
+<p>Some feeds, such as those from The Guardian, also include links to their podcast. And much as I love long read podcasts, those are obviously unsuitable for the kindle. The solution then was to generate the individual feeds from whatever source I want and then re-run <em>those</em> feeds through the Filter feed in RSS-Bridge. </p>
+<h4>Downloading feeds</h4>
+<p>With the feeds successfully generated all that was left to do was to have them formatted correctly and then place them in my kindle. Frankly, this was the easy part: Calibre is already able to fetch various feeds with its "News" function. Of course, for this to work Calibre needs to be running, and one of my constraints was that I wanted this to work from anywhere in the world. The obvious solution was to add another service to the Docker RSS stack.</p>
+<p>Another nifty feature that ships with Calibre is the ability to email books to an Amazon kindle address: by sending a document to an address that you specify on Amazon's website you can have new content show up if you're connected to the internet. Combining this with Calibre's "News" feature and scheduled download, I now have a regular feed update that I can read on an e-ink display.</p>
+    <footer>
+      <p>Published: <time datetime="2022-08-28T00:00:00-07:00">
+        Sun 28 August 2022
+      </time></p>
+        <p>Last updated: <time datetime="2024-10-04T23:08:49.061296-07:00">
+          Fri 04 October 2024
+        </time></p>
+        <address>
+          By             <a href="./">Adnan Valdes</a>
+        </address>
+        <p>
+          Category: <a href="./category/blog.html">blog</a>
+        </p>
+        <p>
+          Tags:
+            <a href="./tag/blog.html">blog</a>
+            <a href="./tag/writing.html">writing</a>
+        </p>
+    </footer>
+  </article>
+  </main>
+  <footer>
+    <nav class="nav">
+      <ul class="nav__ul">
+        ||
+          <li>
+            <a href="https://adnanvaldes.pages.dev">Home</a>
+          </li>
+        ||
+          <li>
+            <a href="feeds/atom.xml">RSS</a>
+          </li>
+        ||
+          <li>
+            <a href="resume.html">Resume</a>
+          </li>
+        ||
+          <li>
+            <a href="archives.html">Archive</a>
+          </li>
+        ||
+      </ul>
+    </nav>
+  </footer>
+  </body>
+</html>

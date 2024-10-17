@@ -1,0 +1,66 @@
+@import url("https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,400;1,500&display=swap");
+
+/* || RESET */
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* || VARIABLES */
+
+:root {
+  /* FONTS */
+  --FF: monospace;
+  --FS: 1rem;
+
+
+  /* COLORS */
+  --BGCOLOR: #1d1f21;
+  --FONT-COLOR: #C9CACC;
+}
+
+
+/* || GENERAL STYLES  */
+
+
+body {
+  font-family: var(--FF);
+  font-size: var(--FS);
+  line-height: 1.5;
+  background-color: var(--BGCOLOR);
+  color: var(--FONT-COLOR);
+  display: block;
+
+}
+
+a:any-link {
+  color: var(--FONT-COLOR);
+  text-decoration: none;
+}
+
+/* || NAV */
+
+.nav {
+  display: inline-block;
+  padding: 1em;
+}
+
+.nav__ul {
+  display: flex;
+  flex-wrap: inherit;
+  justify-content: space-around;
+  gap: 2em; 
+  list-style-type: none;
+  font-size: var(--FS-SMALL);
+}
+
+/* || HEADER */
+
+
+
+
+

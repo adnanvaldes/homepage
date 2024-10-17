@@ -1,0 +1,299 @@
+@import url("https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,500;1,500&display=swap");
+@import url("https://www.nerdfonts.com/assets/css/webfont.css");
+
+/* || RESET */
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+input,
+button,
+textarea {
+  font: inherit;
+}
+
+/* || VARIABLES */
+
+:root {
+  /* FONTS */
+  --FF: "Red Hat Display", sans-serif;
+  --FS: clamp(1rem, 1vh, 1.5rem);
+  --ICON-SIZE: clamp(15px, 20px, 25px);
+
+  /* COLORS */
+  --BGCOLOR: whitesmoke;
+  --HEADER-BGCOLOR: #2a3b7a;
+  --HEADER-FONT-COLOR: whitesmoke;
+  --FONT-COLOR: #000000;
+  --FONT-DIM: #00000098;
+  --LINK-COLOR: #2a3b7a;
+  --LINK-HOVER: rgba(34, 108, 224, 0.6);
+  --LINK-ACTIVE: #1b998b;
+
+  /* STANDARD MARGIN */
+  --MARGIN: clamp(0.5em, 1vh, 1em) auto;
+  --COLUMN-GAP: 1em;
+
+  /* DARKMODE TOGGLE */
+  --TOGGLE-SCALE: 75px;
+  --TOGGLE-OFFSET: 4px;
+  --TOGGLE-BUTTON-SCALE: calc(var(--TOGGLE-SCALE) / 2 - var(--TOGGLE-OFFSET));
+}
+
+/* || UTILITY CLASSES */
+
+.offscreen {
+  position: absolute;
+  left: -10000px;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+/* || GENERAL STYLES */
+
+html {
+  scroll-behavior: smooth;
+  font-size: var(--FS);
+  font-family: var(--FF);
+  background-color: var(--BGCOLOR);
+  color: var(--FONT-COLOR);
+  line-height: 1.5;
+}
+
+body {
+  display: grid;
+  /* Taken from JSON Resume template */
+  grid-template-columns:
+    [full-start] 1fr [main-start side-start] minmax(min-content, 1em)
+    [side-end content-start] minmax(100px, 800px)
+    [main-end content-end] 1fr [full-end];
+  column-gap: var(--COLUMN-GAP);
+}
+
+a:any-link {
+  color: var(--LINK-COLOR);
+  text-decoration: none;
+}
+
+a:focus,
+a:hover {
+  color: var(--LINK-HOVER);
+}
+
+a:active {
+  color: var(--LINK-ACTIVE);
+}
+
+footer {
+  grid-column: full;
+  text-align: center;
+  background-color: var(--HEADER-BGCOLOR);
+  padding: 1em;
+  color: var(--HEADER-FONT-COLOR);
+  display: inherit;
+}
+
+footer a:any-link {
+  color: var(--HEADER-FONT-COLOR);
+}
+
+img {
+  height: var(--ICON-SIZE);
+  width: var(--ICON-SIZE);
+  cursor: pointer;
+}
+/* || HEADER */
+
+.header {
+  grid-template-columns: inherit;
+  grid-column: full;
+  display: inherit;
+  background-color: var(--HEADER-BGCOLOR);
+  color: var(--HEADER-FONT-COLOR);
+  padding-top: 2%;
+  column-gap: inherit;
+}
+
+.header > * {
+  grid-column: main;
+  padding: 1em;
+}
+
+.header__h1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header__h1 span {
+  display: inherit;
+  align-items: inherit;
+  justify-content: inherit;
+  gap: 0.5rem;
+}
+
+.header p {
+  padding-top: 1em;
+}
+
+.header__ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.header a:any-link {
+  color: var(--HEADER-FONT-COLOR);
+}
+
+.header a:focus,
+.header a:hover {
+  color: var(--LINK-HOVER);
+}
+
+.header a:active {
+  color: var(--LINK-ACTIVE);
+}
+
+label:hover {
+  color: var(--LINK-HOVER);
+}
+
+/* || MAIN */
+
+main {
+  display: inherit;
+  grid-template-columns: inherit;
+  grid-column: full;
+  margin: var(--MARGIN);
+  column-gap: inherit;
+  row-gap: 1vh;
+}
+
+.main__h2 {
+  grid-column: side;
+  text-align: left;
+}
+
+/* || SECTION */
+
+section {
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: content;
+}
+
+section ul {
+  list-style-type: none;
+}
+
+.section__skills,
+.section__certificates {
+  justify-content: space-between;
+}
+
+.section__languages {
+  justify-content: space-evenly;
+}
+/* || ARTICLE */
+
+.article {
+  grid-column: content;
+  padding-right: 1.5em;
+  margin-top: 0.5%;
+}
+
+.article__header {
+  margin-bottom: 1%;
+}
+
+.article__ul {
+  margin-top: 1em;
+  list-style-position: inside;
+}
+
+.article__ul li {
+  margin: 0.5%;
+}
+
+.article__p,
+time {
+  color: var(--FONT-DIM);
+}
+
+/* || FOOTER */
+
+footer a:any-link {
+  color: var(--HEADER-FONT-COLOR);
+}
+
+footer a:focus,
+footer a:hover {
+  color: var(--LINK-HOVER);
+}
+
+footer a:active {
+  color: var(--LINK-ACTIVE);
+}
+
+.footer__ul {
+  grid-row: 1; 
+  display: flex;
+  flex-wrap: wrap;
+  justify-content:center; 
+  list-style-type: none;
+  gap: 0.5rem;
+}
+
+/* || MEDIA QUERIES */
+
+@media screen and (max-width: 757px) {
+  .main__h2 {
+    grid-column: content;
+  }
+
+}
+
+@media print {
+  :root {
+    --FS: 12px;
+
+    --BGCOLOR: white;
+    --HEADER-BGCOLOR: white;
+    --HEADER-FONT-COLOR: white;
+    --FONT-COLOR: #000000;
+    --FONT-DIM: #00000098;
+    --LINK-COLOR: #2a3b7a;
+    color: black;
+  }
+
+  .header {
+    font-size: 14px;
+  }
+
+  footer {
+    visibility: hidden;
+  }
+
+  nav {
+    visibility: hidden;
+  }
+
+  .links {
+    visibility: hidden;
+  }
+}
