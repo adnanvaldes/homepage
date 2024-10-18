@@ -45,3 +45,5 @@ cython_debug/
 # vscode
 .vscodium/
 .vscode/
+
+content/
