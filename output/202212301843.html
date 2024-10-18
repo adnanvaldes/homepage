@@ -1,58 +1,53 @@
 <!DOCTYPE html>
+
 <html lang="en">
-      <head>
-      <title>Adnan Valdes</title>
-      <meta name="charset" charset="utf-8" />
-      <meta name="generator" content="Pelican"/>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="stylesheet" href="./theme/css/rdark.css" />
-	    <link rel="stylesheet" type="text/css" href="./theme/css/main.css" />
-      <link href="./" type="application/atom+xml" rel="alternate" title="Adnan Valdes ATOM Feed" />
-        <link href="https://adnanvaldes.pages.dev/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Adnan Valdes Full Atom Feed" />
-        <link href="https://adnanvaldes.pages.dev/feeds/feed.rss" type="application/rss+xml" rel="alternate" title="Adnan Valdes Full RSS Feed" />
-    </head>
-
-
-
-
-    <meta name="tags" content="sysadmin" />
-
-  <body>
-    <header class="header">
-      <nav class="nav">
-        <ul class="nav__ul">
-          [
-            <li>
-              <a href="https://adnanvaldes.pages.dev" target="_blank">Home</a>
+<head>
+<title>Adnan Valdes</title>
+<meta charset="utf-8" name="charset"/>
+<meta content="Pelican" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="./theme/css/rdark.css" rel="stylesheet"/>
+<link href="./theme/css/main.css" rel="stylesheet" type="text/css"/>
+<link href="./" rel="alternate" title="Adnan Valdes ATOM Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/feeds/atom.xml" rel="alternate" title="Adnan Valdes Full Atom Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/feeds/feed.rss" rel="alternate" title="Adnan Valdes Full RSS Feed" type="application/rss+xml"/>
+</head>
+<meta content="sysadmin" name="tags">
+<body>
+<header class="header">
+<nav class="nav">
+<ul class="nav__ul">
+<li>
+              [
+              <a href="https://adnanvaldes.pages.dev">Home</a>
+              ]
             </li>
-          ]
-          [
-            <li>
-              <a href="feeds/atom.xml" target="_blank">RSS</a>
+<li>
+              [
+              <a href="feeds/atom.xml">RSS</a>
+              ]
             </li>
-          ]
-          [
-            <li>
-              <a href="resume.html" target="_blank">Resume</a>
+<li>
+              [
+              <a href="resume.html">Resume</a>
+              ]
             </li>
-          ]
-          [
-            <li>
-              <a href="archives.html" target="_blank">Archive</a>
+<li>
+              [
+              <a href="archives.html">Archive</a>
+              ]
             </li>
-          ]
-        </ul>
-      </nav>
-  </header>
-  <main>
-  <article>
-    <header>
-      <h2>
-        <a href="./202212301843.html" rel="bookmark"
-           title="Permalink to State of the Servers">State of the Servers</a></h2>
-      
-    </header>
-    <p>As the year comes to a close I have 4.5 servers online, with another that is  yet to be built (mostly due to laziness).</p>
+</ul>
+</nav>
+<h1 class="header__h1">Adnan Valdes</h1>
+</header>
+<main>
+<article>
+<header>
+<h2>
+<a href="./202212301843.html" rel="bookmark" title="Permalink to State of the Servers">State of the Servers</a></h2>
+</header>
+<p>As the year comes to a close I have 4.5 servers online, with another that is  yet to be built (mostly due to laziness).</p>
 <h3>Trantor</h3>
 <p>My primary server, known as Trantor, has been online for just over a year. Until I build my last server, Trantor is the machine around which the rest of my network is built. It's main purpose is to serve files with NFS to my desktop, though it also runs all my other services (see below) inside VMs managed  by <a href="https://www.proxmox.com/en/">Proxmox</a>. </p>
 <p>It is an older set up, that so far has really reinforced in me the idea of giving old hardware a new life. The CPU is a 4th gen Intel that I inherited from a friend who isn't all that much into computers and wanted help upgrading his set up. This is paired with 24 GB RAM and two 4 TB SMR Western Digital Red HDDs.</p>
@@ -113,58 +108,61 @@ services:
       - '443:443' # Public HTTPS Port
       - '81:81' # Admin Web Port
       # Add any other Stream port you want to expose
-      # - '21:21' # FTP</p>
+      # - '21:21' # FTP</container-port></host-port></p>
 <div class="highlight"><pre><span></span><code><span class="gh">#</span> Uncomment the next line if you uncomment anything in the section
 <span class="gh">#</span> environment:
   # Uncomment this if you want to change the location of 
   # the SQLite DB file within the container
-  # DB_SQLITE_FILE: &quot;/data/database.sqlite&quot;
+  # DB_SQLITE_FILE: "/data/database.sqlite"
 
   # Uncomment this if IPv6 is not enabled on your host
-  # DISABLE_IPV6: &#39;true&#39;
+  # DISABLE_IPV6: 'true'
 
 volumes:
   <span class="k">-</span> ./data:/data
   <span class="k">-</span> ./letsencrypt:/etc/letsencrypt
 </code></pre></div>
-    <footer>
-      <p>Published: <time datetime="2022-12-30T00:00:00-08:00">
+<footer>
+<p>Published: <time datetime="2022-12-30T00:00:00-08:00">
         Fri 30 December 2022
       </time></p>
-        <p>Last updated: <time datetime="2024-10-04T23:08:49.066296-07:00">
+<p>Last updated: <time datetime="2024-10-04T23:08:49.066296-07:00">
           Fri 04 October 2024
         </time></p>
-        <address>
+<address>
           By             <a href="./">Adnan Valdes</a>
-        </address>
-        <p>
+</address>
+<p>
           Category: <a href="./category/blog.html">blog</a>
-        </p>
-        <p>
+</p>
+<p>
           Tags:
             <a href="./tag/sysadmin.html">sysadmin</a>
-        </p>
-    </footer>
-  </article>
-  </main>
-  <footer>
-    <nav class="nav">
-      <ul class="nav__ul">
-        [
-        <li>
-          <a href="mailto:adnan@av-b.net" target="_blank">Email</a>
+</p>
+</footer>
+</article>
+<ul class="main__ul">
+</ul>
+</main>
+<footer>
+<nav class="nav">
+<ul class="nav__ul">
+<li>
+          [
+          <a href="mailto:elegant.flame6521@fastmail.com" target="_blank">Email</a>
+          ]
         </li>
-        ][
-        <li>
+<li>
+          [
           <a href="https://github.com/adnanvaldes" target="_blank">Github</a>
+          ]
         </li>
-        ][
-        <li>
+<li>
+          [
           <a href="https://www.linkedin.com/in/adnanvaldes/" target="_blank">LinkedIn</a>
+          ]
         </li>
-        ]
-      </ul>
-    </nav>
-  </footer>
-  </body>
-</html>
+</ul></nav>
+</footer>
+</body>
+</meta></html>

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block sitename %}
+<h1 class="header__h1">Adnan Valdes</h1>
+{% endblock %}
+{% block content %}
+{% for article in articles %}
+<article class="archive">
+    <h3 class="archive__h3"><a href="/{{ article.slug }}.html">[ {{ article.title }} ]</a></h3>
+    <span class="archive__article-date">{{ article.date|strftime('%d %B %Y') }}</span>
+</article>
+{% endfor %}
+{% endblock %}

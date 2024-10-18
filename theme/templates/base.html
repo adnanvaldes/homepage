@@ -31,38 +31,50 @@
       <nav class="nav">
         <ul class="nav__ul">
           {% for title, link in MENUITEMS %}
-          [
             <li>
-              <a href="{{ link }}" target="_blank">{{ title }}</a>
+              [
+              <a href="{{ link }}">{{ title }}</a>
+              ]
             </li>
-          ]
           {% endfor %}
         </ul>
       </nav>
       {% block sitename %}
+      <h1 class="header__h1">Adnan Valdes</h1>
       {% endblock %}
   </header>
   <main>
     {% block content %}
     {% endblock %}
+    <ul class="main__ul">
+      {% if articles_previous_page %}
+          <li>
+            [
+            <a href="/{{ articles_previous_page.url }}" class="footer__pagination">Previous Page</a>
+            ]
+          </li>
+          {% else %}
+          {% endif %}
+          {% if articles_next_page %}
+          <li>
+            [
+            <a href="/{{ articles_next_page.url }}" class="footer__pagination">Next Page</a>
+            ]
+          </li>
+          {% else %}
+      {% endif %}
+  </ul>
   </main>
   <footer>
     <nav class="nav">
       <ul class="nav__ul">
-        [
+        {% for title, link in SOCIAL %}
         <li>
-          <a href="mailto:adnan@av-b.net" target="_blank">Email</a>
+          [
+          <a href="{{ link }}" target="_blank">{{ title }}</a>
+          ]
         </li>
-        ][
-        <li>
-          <a href="https://github.com/adnanvaldes" target="_blank">Github</a>
-        </li>
-        ][
-        <li>
-          <a href="https://www.linkedin.com/in/adnanvaldes/" target="_blank">LinkedIn</a>
-        </li>
-        ]
-      </ul>
+        {% endfor %}
     </nav>
   </footer>
   </body>

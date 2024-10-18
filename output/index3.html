@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<title>Adnan Valdes</title>
+<meta charset="utf-8" name="charset"/>
+<meta content="Pelican" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="./theme/css/rdark.css" rel="stylesheet"/>
+<link href="./theme/css/main.css" rel="stylesheet" type="text/css"/>
+<link href="./" rel="alternate" title="Adnan Valdes ATOM Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/feeds/atom.xml" rel="alternate" title="Adnan Valdes Full Atom Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/feeds/feed.rss" rel="alternate" title="Adnan Valdes Full RSS Feed" type="application/rss+xml"/>
+</head>
+<body>
+<header class="header">
+<nav class="nav">
+<ul class="nav__ul">
+<li>
+              [
+              <a href="https://adnanvaldes.pages.dev">Home</a>
+              ]
+            </li>
+<li>
+              [
+              <a href="feeds/atom.xml">RSS</a>
+              ]
+            </li>
+<li>
+              [
+              <a href="resume.html">Resume</a>
+              ]
+            </li>
+<li>
+              [
+              <a href="archives.html">Archive</a>
+              ]
+            </li>
+</ul>
+</nav>
+<h1 class="header__h1">Adnan Valdes</h1>
+</header>
+<main>
+<article class="article">
+<h2 class="article__h2"><a href="/202204251226.html">[ Learning a Language ]</a></h2>
+<span class="article__article-date">25 April 2022</span>
+<h1>Five different things</h1>
+<ol>
+<li>Syntax: how to write language constructs?</li>
+<li>Semantics: What to programs mean? How do the typechecking and evaluation rules work?</li>
+<li>Idioms: What are typical patterns for using language features to express your computation?<ol>
+<li>It's not enough to iknow that if/else expressoins work; we need to know <em>when</em> to use them to represent and recognize patterns of use.</li>
+</ol>
+</li>
+<li>Libraries: What facilities does the language (or a well-known project) provide as "standard"? (eg. file access, data structures, etc.)</li>
+<li>Tools: What do language implementations provide to make your job easier? (eg. REPL, debugger, code formatter, etc)</li>
+</ol>
+</article>
+<article class="article">
+<h2 class="article__h2"><a href="/202204191535.html">[ Precision Flight Controls ]</a></h2>
+<span class="article__article-date">19 April 2022</span>
+<h2>Installing Win10 on old hardware</h2>
+<p>Originally Win 7 Pro installed on two WD Blue HDDs. Target set up: Windows 10 on a WD Blue 500G SSD to speed up boot times.</p>
+<p>Problems encountered: old motherboard, no driver support, "missing media drivers", "no OS found" after install.</p>
+<p>Solution: Install Windows 10 on SSD via a different motherboard and configure. Then plug SSD to old computer</p>
+<h2>Setting up X-Plane</h2>
+<p>X-Plane 11 installation was straightforward. NVIDIA drivers needed to be updated: GeForce GTX 750 Ti installed with drivers version 4xx. Update to 512.15.</p>
+<p>X-Plane appears to work and boots well. However, there is concern over COM port usability for hardware flight controls. Install PFC drivers; need to compare FSUIPC and XUIPC -&gt; specifically, check if the later depends on the former, and whether it is required. Nonetheless, download all DLL as a precaution.</p>
+<p>Hardware was working before, so plug in old HDDs and browse for relevant files. Copy Custom Maps into X-Plane, copy PFCTest software to manage COM port. Suspect ignition issue at hardware level related to this or mismatch of hardware inputs and <code>datarefs</code> assignment.</p>
+<h3>Testing network communication</h3>
+<p>Install X-Plane 11 on Arch Linux to set up instructor station. Concerns: OS incompatibility.</p>
+<h3>Running on Linux</h3>
+<p>Installer fails due to missing <code>libGLU.so.1</code>. Name is apparently outdated, and often just a symlink for <code>glu</code>. To install, <code>yay -S glu</code>; after a .14 MiB download, X-Plane installer runs.</p>
+<h2>April 20th, 2022</h2>
+<p>After installing X-Plane on both computers and plugging all hardware in, including …</p>
+</article>
+<article class="article">
+<h2 class="article__h2"><a href="/202203071616.html">[ Zork Server ]</a></h2>
+<span class="article__article-date">07 March 2022</span>
+<p>I love text adventure games. I am not very good at them, but I very much enjoy the world building and interactive aspect of text-based terminal games, in much the same way that I love tabletop RPGs like <em>Dungeons and Dragons</em> or <em>Stars Without Number</em>.</p>
+<p>Text adventures are also excellent candidates for in-flight entertainment on long-haul routes. I recently travelled to Delhi from Vancouver, on a flight that was scheduled 3 days after the beginning of the Russian invasion of Ukraine. Because of the closure of Russian airspace to most airlines, my route was YVR -&gt; YYZ (3 hour stop) YYZ -&gt; Delhi. In other words, the ETE changed from about 13 hours to just over 22 hours.</p>
+<p>To set up, I bought the Zork Anthology through Steam. I know Infocom has made Zork 1 - 3 <a href="http://www.infocom-if.org/downloads/downloads.html">available for free</a>, but because this was a fairly late schedule change I decided to go the easy way and shell out $8.00 for the whole set.</p>
+<p>The games themselves work well, but I had a few problems with the set-up. To start with, I have Manjaro installed on all my computers, but the Zork Anthology only has a Windows release on Steam. Not much of an issue in itself: I regularly use Proton to play on Linux and I have had very few problems. However, the thought of running Proton to <em>then</em> run a DOS emulator to play Zork rubbed me the wrong way.</p>
+<p>The other option I've seen is to play Zork through …</p>
+</article>
+<ul class="main__ul">
+<li>
+            [
+            <a class="footer__pagination" href="/index2.html">Previous Page</a>
+            ]
+          </li>
+</ul>
+</main>
+<footer>
+<nav class="nav">
+<ul class="nav__ul">
+<li>
+          [
+          <a href="mailto:elegant.flame6521@fastmail.com" target="_blank">Email</a>
+          ]
+        </li>
+<li>
+          [
+          <a href="https://github.com/adnanvaldes" target="_blank">Github</a>
+          ]
+        </li>
+<li>
+          [
+          <a href="https://www.linkedin.com/in/adnanvaldes/" target="_blank">LinkedIn</a>
+          ]
+        </li>
+</ul></nav>
+</footer>
+</body>
+</html>
