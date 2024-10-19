@@ -56,20 +56,6 @@ main {
   margin: 0 auto;
 }
 
-img {
-    float: inline-end;
-    border-left: 2px solid var(--FONT-COLOR);
-    font-size: 1.5rem;
-    line-height: 1.2;
-    margin-top: 1rem;
-    margin-left: 1rem;
-    padding-left: 3rem;
-    text-align: right;
-    text-transform: uppercase;
-    width: 30%;
-    font-weight: bold;
-}
-
 pre {
   /* To wrap codeblocks */
   white-space: pre-wrap;
@@ -163,6 +149,16 @@ p {
   margin: var(--MARGIN-NORMAL) auto;
 }
 
+img {
+  float: inline-end;
+  border-left: 2px solid var(--FONT-COLOR);
+  margin-top: 2rem;
+  margin-left: 1rem;
+  padding-left: 3rem;
+  min-width: 300px;
+  width: 35%;
+}
+
 quote {
   float: inline-end;
   border-left: 2px solid var(--FONT-COLOR);
@@ -172,7 +168,8 @@ quote {
   padding-left: 3rem;
   text-align: right;
   text-transform: uppercase;
-  width: 30%;
+  min-width: 260px;
+  width: 35%;
   font-weight: bold;
 }
 
