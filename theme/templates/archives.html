@@ -4,10 +4,12 @@
 <h1 class="header__h1">Adnan Valdes</h1>
 {% endblock %}
 {% block content %}
+<h2 class="archive__h2">Archive</h2>
+<ul class="archive__ul">
 {% for article in articles %}
-<article class="archive">
-    <h3 class="archive__h3"><a href="/{{ article.slug }}.html">[ {{ article.title }} ]</a></h3>
-    <span class="archive__article-date">{{ article.date|strftime('%d %B %Y') }}</span>
-</article>
+    <li>
+        <a href="/{{ article.slug }}.html"><date datetime="{{ article.date|strftime('%Y-%m-%d') }}">{{ article.date|strftime('%Y %b %d') }}</date> - <span class="archive__span">{{ article.title }}</span></a>
+    </li>
 {% endfor %}
+</ul>
 {% endblock %}

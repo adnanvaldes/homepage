@@ -8,8 +8,8 @@
 {% block content %}
 {% for article in articles_page.object_list %}
 <article class="article">
-    <h2 class="article__h2"><a href="/{{ article.slug }}.html">[ {{ article.title }} ]</a></h2>
-    <span class="article__article-date">{{ article.date|strftime('%d %B %Y') }}</span>
+    <h2 class="article__h2"><a href="/{{ article.slug }}.html">[ {{ article.title }}&nbsp]</a></h2>
+    <date class="article__date" datetime="{{ article.date|strftime('%Y-%m-%d') }}">Published: {{ article.date|strftime('%d %B %Y') }}</date>
     {{ article.summary|move_first_image_to_top|safe }}
 </article>
 {% endfor %}

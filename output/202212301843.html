@@ -6,47 +6,36 @@
 <meta charset="utf-8" name="charset"/>
 <meta content="Pelican" name="generator"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<link href="./theme/css/rdark.css" rel="stylesheet"/>
+<link href="./theme/css/mustang.css" rel="stylesheet"/>
 <link href="./theme/css/main.css" rel="stylesheet" type="text/css"/>
 <link href="./" rel="alternate" title="Adnan Valdes ATOM Feed" type="application/atom+xml"/>
 <link href="https://adnanvaldes.pages.dev/feeds/atom.xml" rel="alternate" title="Adnan Valdes Full Atom Feed" type="application/atom+xml"/>
 <link href="https://adnanvaldes.pages.dev/feeds/feed.rss" rel="alternate" title="Adnan Valdes Full RSS Feed" type="application/rss+xml"/>
 </head>
-<meta content="sysadmin" name="tags">
 <body>
 <header class="header">
 <nav class="nav">
 <ul class="nav__ul">
 <li>
-              [
-              <a href="https://adnanvaldes.pages.dev">Home</a>
-              ]
-            </li>
+<a href="https://adnanvaldes.pages.dev">~/home/adnan</a>
+</li>
 <li>
-              [
-              <a href="feeds/atom.xml">RSS</a>
-              ]
-            </li>
+<a href="feeds/atom.xml">~/rss</a>
+</li>
 <li>
-              [
-              <a href="resume.html">Resume</a>
-              ]
-            </li>
+<a href="resume.html">~/resume</a>
+</li>
 <li>
-              [
-              <a href="archives.html">Archive</a>
-              ]
-            </li>
+<a href="archives.html">~/archive</a>
+</li>
 </ul>
 </nav>
 <h1 class="header__h1">Adnan Valdes</h1>
 </header>
 <main>
-<article>
-<header>
-<h2>
-<a href="./202212301843.html" rel="bookmark" title="Permalink to State of the Servers">State of the Servers</a></h2>
-</header>
+<article class="article">
+<h1>[ State of the Servers ]</h1>
+<date class="article__date" datetime="2022-12-30">Published: 30 December 2022</date>
 <p>As the year comes to a close I have 4.5 servers online, with another that is  yet to be built (mostly due to laziness).</p>
 <h3>Trantor</h3>
 <p>My primary server, known as Trantor, has been online for just over a year. Until I build my last server, Trantor is the machine around which the rest of my network is built. It's main purpose is to serve files with NFS to my desktop, though it also runs all my other services (see below) inside VMs managed  by <a href="https://www.proxmox.com/en/">Proxmox</a>. </p>
@@ -93,53 +82,6 @@
 <p>Although not set in stone, in 2023 I will also move some of the more critical apps that I have into their own VMs. The idea is that once I have a HA Proxmox cluster I can ensure some more redundancy for these services, such as the Matrix server (which my friends use) and anything related to my network (PiHole and Wireguard), since I need them to be alive to use the internet.</p>
 <p>I also want to lower my dependency on GUIs that manage my configurations - especially those that, once set up, remain generally static or have few changes. I am talking about stuff like Nginx Proxy Manager, which I want to replace with pure Nginx, and Portainer, which I can replace with <a href="https://github.com/jesseduffield/lazydocker">lazydocker</a>.</p>
 <p>All in all there are quite a few changes I have planned for the year, although it is less a process of innovation and more a process of consolidation.</p>
-<p>admin.trantor.home.arpa:/mnt/storage/media/audiobooks      /root/audiobooks nfs soft,timeo=30 0 0
-admin.trantor.home.arpa:/mnt/storage/media/podcasts        /root/podcasts nfs soft,timeo=30 0 0
-admin.trantor.home.arpa:/mnt/storage/media/books           /root/books nfs soft,timeo=30 0 0
-admin.trantor.home.arpa:/mnt/storage/config/audiobookshelf /root/config nfs soft,timeo=30 0 0</p>
-<p>version: "3"
-services:
-  app:
-    image: 'jc21/nginx-proxy-manager:latest'
-    restart: unless-stopped
-    ports:
-      # These ports are in format <host-port>:<container-port>
-      - '80:80' # Public HTTP Port
-      - '443:443' # Public HTTPS Port
-      - '81:81' # Admin Web Port
-      # Add any other Stream port you want to expose
-      # - '21:21' # FTP</container-port></host-port></p>
-<div class="highlight"><pre><span></span><code><span class="gh">#</span> Uncomment the next line if you uncomment anything in the section
-<span class="gh">#</span> environment:
-  # Uncomment this if you want to change the location of 
-  # the SQLite DB file within the container
-  # DB_SQLITE_FILE: "/data/database.sqlite"
-
-  # Uncomment this if IPv6 is not enabled on your host
-  # DISABLE_IPV6: 'true'
-
-volumes:
-  <span class="k">-</span> ./data:/data
-  <span class="k">-</span> ./letsencrypt:/etc/letsencrypt
-</code></pre></div>
-<footer>
-<p>Published: <time datetime="2022-12-30T00:00:00-08:00">
-        Fri 30 December 2022
-      </time></p>
-<p>Last updated: <time datetime="2024-10-04T23:08:49.066296-07:00">
-          Fri 04 October 2024
-        </time></p>
-<address>
-          By             <a href="./">Adnan Valdes</a>
-</address>
-<p>
-          Category: <a href="./category/blog.html">blog</a>
-</p>
-<p>
-          Tags:
-            <a href="./tag/sysadmin.html">sysadmin</a>
-</p>
-</footer>
 </article>
 <ul class="main__ul">
 </ul>
@@ -148,21 +90,15 @@ volumes:
 <nav class="nav">
 <ul class="nav__ul">
 <li>
-          [
-          <a href="mailto:elegant.flame6521@fastmail.com" target="_blank">Email</a>
-          ]
-        </li>
+<a href="mailto:elegant.flame6521@fastmail.com" target="_blank">~/email</a>
+</li>
 <li>
-          [
-          <a href="https://github.com/adnanvaldes" target="_blank">Github</a>
-          ]
-        </li>
+<a href="https://github.com/adnanvaldes" target="_blank">~/github</a>
+</li>
 <li>
-          [
-          <a href="https://www.linkedin.com/in/adnanvaldes/" target="_blank">LinkedIn</a>
-          ]
-        </li>
+<a href="https://www.linkedin.com/in/adnanvaldes/" target="_blank">~/linkedin</a>
+</li>
 </ul></nav>
 </footer>
 </body>
-</meta></html>
+</html>

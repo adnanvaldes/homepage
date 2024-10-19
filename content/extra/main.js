@@ -2,10 +2,10 @@ let lightIcon = "theme/img/sun.svg";
 let darkIcon =  "theme/img/moon.svg";
 
 function enableDark() {
-    document.documentElement.style.setProperty('--BGCOLOR', '#1d1f21');
-    document.documentElement.style.setProperty('--HEADER-BGCOLOR', '#C9CACC');
-    document.documentElement.style.setProperty('--HEADER-FONT-COLOR', '#1d1f21');
-    document.documentElement.style.setProperty('--FONT-COLOR', '#C9CACC');
+    document.documentElement.style.setProperty('--BGCOLOR', 'hsl(180, 2%, 11%)');
+    document.documentElement.style.setProperty('--HEADER-BGCOLOR', 'silver');
+    document.documentElement.style.setProperty('--HEADER-FONT-COLOR', 'hsl(180, 2%, 11%)');
+    document.documentElement.style.setProperty('--FONT-COLOR', 'silver');
     document.documentElement.style.setProperty('--FONT-DIM', '#959493');
     document.documentElement.style.setProperty('--LINK-COLOR', '#90b0d8');
     document.documentElement.style.setProperty('--LINK-HOVER', 'rgba(34, 108, 224, 0.6)');

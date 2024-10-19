@@ -6,7 +6,7 @@
       <meta name="charset" charset="utf-8" />
       <meta name="generator" content="Pelican"/>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="stylesheet" href="{{ SITEURL }}/theme/css/rdark.css" />
+      <link rel="stylesheet" href="{{ SITEURL }}/theme/css/mustang.css" />
 	    <link rel="stylesheet" type="text/css" href="{{ SITEURL }}/theme/css/main.css" />
       <link href="{{ SITEURL }}/{{ FEED }}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} ATOM Feed" />
       {% if SITESUBTITLE %}
@@ -32,9 +32,7 @@
         <ul class="nav__ul">
           {% for title, link in MENUITEMS %}
             <li>
-              [
-              <a href="{{ link }}">{{ title }}</a>
-              ]
+              <a href="{{ link }}">~/{{ title }}</a>
             </li>
           {% endfor %}
         </ul>
@@ -49,17 +47,13 @@
     <ul class="main__ul">
       {% if articles_previous_page %}
           <li>
-            [
-            <a href="/{{ articles_previous_page.url }}" class="footer__pagination">Previous Page</a>
-            ]
+            <a href="/{{ articles_previous_page.url }}" class="footer__pagination nowrap">[ Previous Page ]</a>
           </li>
           {% else %}
           {% endif %}
           {% if articles_next_page %}
           <li>
-            [
-            <a href="/{{ articles_next_page.url }}" class="footer__pagination">Next Page</a>
-            ]
+            <a href="/{{ articles_next_page.url }}" class="footer__pagination nowrap">[ Next Page ]</a>
           </li>
           {% else %}
       {% endif %}
@@ -70,9 +64,7 @@
       <ul class="nav__ul">
         {% for title, link in SOCIAL %}
         <li>
-          [
-          <a href="{{ link }}" target="_blank">{{ title }}</a>
-          ]
+          <a href="{{ link }}" target="_blank">~/{{ title }}</a>
         </li>
         {% endfor %}
     </nav>

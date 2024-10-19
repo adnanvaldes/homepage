@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<article class="article">
+    <h1>[ {{ article.title }} ]</h1>
+    <date class="article__date" datetime="{{ article.date|strftime('%Y-%m-%d') }}">Published: {{ article.date|strftime('%d %B %Y') }}</date>
+    {{ article.content|process_imgs|safe }}
+</article>
+{% endblock %}
