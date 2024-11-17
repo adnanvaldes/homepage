@@ -47,3 +47,4 @@ cython_debug/
 .vscode/
 
 content/
+__pycache__/pelicanconf.cpython-312.pyc
