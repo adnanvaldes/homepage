@@ -6,7 +6,7 @@
 <h1 class="header__h1">Adnan Valdes</h1>
 {% endblock %}
 {% block content %}
-{% for article in articles_page.object_list %}
+{% for article in articles %}
 <article class="article">
     <h2 class="article__h2"><a href="/{{ article.slug }}.html">[ {{ article.title }}&nbsp]</a></h2>
     <date class="article__date" datetime="{{ article.date|strftime('%Y-%m-%d') }}">Published: {{ article.date|strftime('%d %B %Y') }}</date>

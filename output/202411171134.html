@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<title>Adnan Valdes</title>
+<meta charset="utf-8" name="charset"/>
+<meta content="Pelican" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="./theme/css/mustang.css" rel="stylesheet"/>
+<link href="./theme/css/main.css" rel="stylesheet" type="text/css"/>
+<link href="./" rel="alternate" title="Adnan Valdes ATOM Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/feeds/atom.xml" rel="alternate" title="Adnan Valdes Full Atom Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/feeds/feed.rss" rel="alternate" title="Adnan Valdes Full RSS Feed" type="application/rss+xml"/>
+</head>
+<body>
+<header class="header">
+<nav class="nav">
+<ul class="nav__ul">
+<li>
+<a href="https://adnanvaldes.pages.dev">~/home/adnan</a>
+</li>
+<li>
+<a href="feeds/atom.xml">~/rss</a>
+</li>
+<li>
+<a href="resume.html">~/resume</a>
+</li>
+<li>
+<a href="archives.html">~/archive</a>
+</li>
+</ul>
+</nav>
+<h1 class="header__h1">Adnan Valdes</h1>
+</header>
+<main>
+<article class="article">
+<h1>[ task-cli ]</h1>
+<date class="article__date" datetime="2024-11-17">Published: 17 November 2024</date>
+<p><code>task-cli</code> is the first project I'm working on from <a href="https://roadmap.sh">roadmap.sh</a> as part of their <a href="https://roadmap.sh/backend/projects">Backend Projects</a>.</p>
+<p>I decided to write it in JavaScript using Node.js rather than defaulting to my go-to of Python because I wanted to learn how those two work, given how ubiquitous they are.</p>
+<p>The major objective here was to get started with JavaScript and NodeJs. While I don't know that my code is quite idiomatic yet, at least I'm feeling more comfortable with the syntax and some of the build-in functionality.</p>
+<p>One of the things I was excited to use was <code>switch case</code> statements. In previous Python code, for example, I've used (but tried to avoid!) series of <code>if...else</code> statements:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">switch</span><span class="p">(</span><span class="n">status</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="s2">"todo"</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">elif</span> <span class="n">status</span> <span class="o">==</span> <span class="s2">"mark-in-progress"</span>
+        <span class="k">pass</span>
+</code></pre></div>
+<blockquote>
+<p>[!aside]
+As of version 3.10, Python has a "structural pattern matching" feature introduced by <a href="https://peps.python.org/pep-0636/">PEP 636</a>.
+</p>
+</blockquote>
+<p>With JavaScript, I was able to apply similar logic without having a long series of comparison operations:</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">taskID</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">item</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">status</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="s2">"todo"</span><span class="o">:</span>
+<span class="w">            </span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"todo"</span><span class="p">;</span>
+<span class="w">            </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="s2">"mark-in-progress"</span><span class="o">:</span>
+<span class="w">            </span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"in-progress"</span><span class="p">;</span>
+<span class="w">            </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="s2">"mark-done"</span><span class="o">:</span>
+<span class="w">            </span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"done"</span><span class="p">;</span>
+<span class="w">            </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="k">default</span><span class="o">:</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s2">"Mark status is one of [todo | mark-in-progress | mark-done]"</span><span class="p">);</span>
+</code></pre></div>
+<p>One of the interesting things about this is the requirement to have a <code>break</code> statement for each case. Without them, the switch case will still work, but the <code>default</code> case always runs.</p>
+<p>Another fun part of playing with JavaScript ES6 is the ability to use the <code>class</code> keyword. Coming from Python, this made class construction feel incredibly familiar.  For example, the main class I used in <code>task-cli</code> was <code>Tasks</code>, defined as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nx">Tasks</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">constructor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">taskPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">cwd</span><span class="p">()</span><span class="si">}</span><span class="sb">/tasks.json`</span><span class="p">;</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">taskList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">readTasksFile</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+<p>If I'd written this in Python, I would have used very similar syntax:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Tasks</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tasksPath</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">path_function</span><span class="p">()</span><span class="si">}</span><span class="s2">/tasks.json"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">taskList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_tasks_file</span><span class="p">()</span>
+</code></pre></div>
+<p>Here is an unordered, incomplete list of other things I learned:</p>
+<ul>
+<li>Where to find JavaScript and Node documentation</li>
+<li>That JavaScript has automatic semi-colon insertion!</li>
+<li>How to use <code>for...of</code> loops</li>
+<li>General JavaScript syntax</li>
+<li>Using Node and NPM to create a package</li>
+<li>A better understanding of OOP</li>
+<li>How to use a bunch of build-in methods</li>
+<li>That <code>.js</code>, <code>.mjs</code>, and <code>.cjs</code> files are the same but <a href="https://stackoverflow.com/questions/57492546/what-is-the-difference-between-js-and-mjs-files">different</a> (they indicate different versions of ECMAScript)</li>
+<li>A thing called <em>Object spreading</em>, though I have to look into it more</li>
+</ul>
+<h2>Things I'm happy with</h2>
+<p>From a bird's eye view, I am happy with a <em>simple</em> project layout. That is to say, I chose to have only two files for the program -  <code>task-cli.msj</code> and <code>index.mjs</code>. </p>
+<p>I can appreciate the utility of having separate files for each concern (I did this, for example, for my <a href="https://github.com/adnanvaldes/apl-api/tree/main/apl_api">APL-API</a> project). I suspect that this is a point of critical mass at which doing so makes sense; but for simple projects, the overhead of multiple files, imports flying all over the place, I'm not so sure it makes sense.</p>
+<p>In a way, OOP helps with this. I could have written each method as its own file - <code>addTask.mjs</code>, <code>updateTask.mjs</code>, etc - and then imported them all into a single interface. But, in my mind, all of these operations are related, so it made more sense to include them as methods of the <code>Task</code> class itself.</p>
+<p>The command-line interface was placed into a separate file (<code>index.mjs</code>) because that is definitely a different concern. While I could have placed the small amount of code at the bottom of the main file, having the user-interface separate from the code logic made far more sense to me.</p>
+<p>In general I am happy with the project itself. It doesn't have to be fancy, and it succeeded in the goal of helping me learn JS. Perhaps in the future I'll come back to it and re-write the whole thing once I'm more proficient!</p>
+<h2>Things I want to improve</h2>
+<p>This section is, in a way, thinking out-loud. As I write this, things become clear in my mind and may end up fixing them. The problems described, therefore, apply to the first version of the app that I finished within the time constraints I gave myself. Some things may be fixed by the time I publish this, some things might not.</p>
+<h3>Argument parsing</h3>
+<p>At the moment, the argument parsing is rather brittle. In a future iteration I'd like more complex logic to manage, clean, and validate the input from users, along with better instructions when the input does not match the expected options.</p>
+<p>For example,  the <code>updateTask</code> function takes two-arguments: the <code>id</code> of the item being updated, and the text to insert. It's <em>ideal</em> usage is as follows:</p>
+<div class="highlight"><pre><span></span><code>task-cli<span class="w"> </span>update<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="s2">"Update this task"</span>
+</code></pre></div>
+<p>If the task is not found, the program will return a helpful message: <code>Task not found (ID: 2)</code>. But if it is found, there is nothing stopping the using from adding more arguments:</p>
+<div class="highlight"><pre><span></span><code>task-cli<span class="w"> </span>update<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="s2">"update this task"</span><span class="w"> </span><span class="s2">"ignore this part, I guess"</span>
+</code></pre></div>
+<p>The last argument is simply ignored, which isn't a particularly clean pattern. It would be much better to show an error explaining why that is not a valid operation.</p>
+<h3>listTasks</h3>
+<p>At the moment, <code>listTasks</code> is a bit complex and messy. For one, I think I could use constants and ternary operators to simplify the code and make the error handling more dynamic.</p>
+<p>So rather than this:</p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nx">listTasks</span><span class="p">(</span><span class="nx">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">status</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">item</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">taskList</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span>
+<span class="w">          </span><span class="sb">`</span><span class="si">${</span><span class="nx">green</span><span class="si">}${</span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">description</span><span class="si">}</span><span class="sb">\n</span><span class="si">${</span><span class="nx">yellow</span><span class="si">}</span><span class="sb">Status: </span><span class="si">${</span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">status</span><span class="si">}</span><span class="sb">\nTask ID: </span><span class="si">${</span><span class="nx">item</span><span class="p">.</span><span class="nx">id</span><span class="si">}</span><span class="sb">\n</span><span class="si">${</span><span class="nx">reset</span><span class="si">}</span><span class="sb">created </span><span class="si">${</span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">createdAt</span><span class="si">}</span><span class="sb"> | updated </span><span class="si">${</span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">updatedAt</span><span class="si">}</span><span class="sb">\n`</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">[</span><span class="s2">"started"</span><span class="p">,</span><span class="w"> </span><span class="s2">"todo"</span><span class="p">,</span><span class="w"> </span><span class="s2">"done"</span><span class="p">].</span><span class="nx">includes</span><span class="p">(</span><span class="nx">status</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"[status] must be one of [todo | started | done]"</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Tasks </span><span class="si">${</span><span class="nx">status</span><span class="si">}</span><span class="sb">:\n`</span><span class="p">);</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">item</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">taskList</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">status</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span>
+<span class="w">            </span><span class="sb">`Task: </span><span class="si">${</span><span class="nx">green</span><span class="si">}${</span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">description</span><span class="si">}</span><span class="sb">\n</span><span class="si">${</span><span class="nx">yellow</span><span class="si">}</span><span class="sb">Task ID: </span><span class="si">${</span><span class="nx">item</span><span class="p">.</span><span class="nx">id</span><span class="si">}${</span><span class="nx">reset</span><span class="si">}</span><span class="sb">\ncreated </span><span class="si">${</span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">createdAt</span><span class="si">}</span><span class="sb"> updated </span><span class="si">${</span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">updatedAt</span><span class="si">}</span><span class="sb">\n`</span>
+<span class="w">          </span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+<p>I should have done this:</p>
+<div class="highlight"><pre><span></span><code><span class="nx">listTasks</span><span class="p">(</span><span class="nx">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">validStatuses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"todo"</span><span class="p">,</span><span class="w"> </span><span class="s2">"in-progress"</span><span class="p">,</span><span class="w"> </span><span class="s2">"done"</span><span class="p">];</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">status</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nx">validStatuses</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">status</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[status] must be one of </span><span class="si">${</span><span class="nx">validStatuses</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">" | "</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">tasksToDisplay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">status</span>
+<span class="w">    </span><span class="o">?</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">taskList</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">task</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">task</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">status</span><span class="p">)</span>
+<span class="w">    </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">taskList</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">tasksToDisplay</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"No tasks found."</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nx">tasksToDisplay</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">item</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span>
+<span class="w">      </span><span class="sb">`</span><span class="si">${</span><span class="nx">green</span><span class="si">}${</span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">description</span><span class="si">}</span><span class="sb">\n</span><span class="si">${</span><span class="nx">yellow</span><span class="si">}</span><span class="sb">Status: </span><span class="si">${</span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">status</span><span class="si">}</span><span class="sb">\nTask ID: </span><span class="si">${</span><span class="nx">item</span><span class="p">.</span><span class="nx">id</span><span class="si">}</span><span class="sb">\n</span><span class="si">${</span><span class="nx">reset</span><span class="si">}</span><span class="sb">created </span><span class="si">${</span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">createdAt</span><span class="si">}</span><span class="sb"> | updated </span><span class="si">${</span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">updatedAt</span><span class="si">}</span><span class="sb">\n`</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The main difference is the use of the <code>validStatuses</code> constant the the ternary operator in <code>tasksToDisplay</code>.</p>
+<p>Let me break this apart:</p>
+<p>The first thing is to have a constant at the beginning of the method that defines valid statuses. This makes it easier to see, rather than scavenging through all the lines of code, and certainly easier to update or expand in the future should I choose to do so. It also means I can use the <code>validStatuses</code> constant in both error handling and filtering:</p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">validStatuses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"todo"</span><span class="p">,</span><span class="w"> </span><span class="s2">"in-progress"</span><span class="p">,</span><span class="w"> </span><span class="s2">"done"</span><span class="p">];</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">status</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nx">validStatuses</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">status</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[status] must be one of </span><span class="si">${</span><span class="nx">validStatuses</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">" | "</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="p">;</span>
+</code></pre></div>
+<p>The next set of lines involves the use of the ternary operator. In Python, a ternary operator is written as:</p>
+<div class="highlight"><pre><span></span><code><span class="p">[</span><span class="n">do_this</span><span class="p">]</span> <span class="k">if</span> <span class="p">[</span><span class="n">condition</span><span class="p">]</span> <span class="k">else</span> <span class="p">[</span><span class="n">do_that</span><span class="p">]</span>
+</code></pre></div>
+<p>In JavaScript, the ternary operator is perhaps less human-readable, but has a very similar feel to it:</p>
+<div class="highlight"><pre><span></span><code><span class="p">[</span><span class="nx">condition</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">[</span><span class="nx">do_this</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">do_that</span><span class="p">]</span>
+</code></pre></div>
+<p>Thus, I can create a constant that uses the build-in filtered method if there is a <code>status</code> option, else simply use the entire list:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">tasksToDisplay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">status</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">taskList</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">task</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">task</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">status</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">taskList</span><span class="p">;</span>
+</code></pre></div>
+<p>The result is that the logic to print the list to the terminal does not have to be repeated: whether there is a status or not, there is a single for loop that prints to the terminal:</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">let</span><span class="w"> </span><span class="nx">item</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">tasksToDisplay</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Task: </span><span class="si">${</span><span class="nx">green</span><span class="si">}${</span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">description</span><span class="si">}</span><span class="sb">\n</span><span class="si">${</span><span class="nx">yellow</span><span class="si">}</span><span class="sb">Status: </span><span class="si">${</span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">status</span><span class="si">}</span><span class="sb">\n</span><span class="si">${</span><span class="nx">yellow</span><span class="si">}</span><span class="sb">Task ID: </span><span class="si">${</span><span class="nx">item</span><span class="p">.</span><span class="nx">id</span><span class="si">}${</span><span class="nx">reset</span><span class="si">}</span><span class="sb">\ncreated </span><span class="si">${</span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">createdAt</span><span class="si">}</span><span class="sb"> updated </span><span class="si">${</span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">updatedAt</span><span class="si">}</span><span class="sb">\n`</span>
+<span class="p">);</span>
+</code></pre></div>
+<p>This approach also works well for the <code>markTask</code> method.</p>
+<h3>STATUS</h3>
+<p>Rather than using individual strings everywhere for status - that is, using "todo", "in-progress", and "done" - and then matching them to arguments, it is better design to declare a constant that holds those values and re-use them. </p>
+<p>This way I can modify the arguments themselves, avoid errors due to typos, and expand the list of available options easily. The original code looked like this:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">//task-cli.mjs</span>
+<span class="k">case</span><span class="w"> </span><span class="s2">"todo"</span><span class="o">:</span>
+<span class="w">    </span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"todo"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="k">case</span><span class="w"> </span><span class="s2">"mark-in-progress"</span><span class="o">:</span>
+<span class="w">    </span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"in-progress"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="k">case</span><span class="w"> </span><span class="s2">"mark-done"</span><span class="o">:</span>
+<span class="w">    </span><span class="nx">item</span><span class="p">.</span><span class="nx">task</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"done"</span><span class="p">;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">//index.mjs</span>
+<span class="k">case</span><span class="w"> </span><span class="s2">"mark-in-progress"</span><span class="o">:</span>
+<span class="w">    </span><span class="nx">taskCLI</span><span class="p">.</span><span class="nx">markTask</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="mf">1</span><span class="p">],</span><span class="w"> </span><span class="nx">args</span><span class="p">[</span><span class="mf">0</span><span class="p">]);</span>
+<span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="k">case</span><span class="w"> </span><span class="s2">"mark-done"</span><span class="o">:</span>
+<span class="w">    </span><span class="nx">taskCLI</span><span class="p">.</span><span class="nx">markTask</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="mf">1</span><span class="p">],</span><span class="w"> </span><span class="nx">args</span><span class="p">[</span><span class="mf">0</span><span class="p">]);</span>
+</code></pre></div>
+<p>A <em>much</em> better design is to declare the options as part of the <code>Tasks</code> class, and then re-use those:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nx">Tasks</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">constructor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">taskPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">cwd</span><span class="p">()</span><span class="si">}</span><span class="sb">/tasks.json`</span><span class="p">;</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">taskList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">readTasksFile</span><span class="p">();</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">utils</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Utils</span><span class="p">();</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">STATUS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">TODO</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">"todo"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">IN_PROGRESS</span><span class="o">:</span><span class="w"> </span><span class="s2">"in-progress"</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">DONE</span><span class="o">:</span><span class="w"> </span><span class="s2">"done"</span>
+<span class="w">    </span><span class="p">};</span>
+</code></pre></div>
+<p>This then allows me to use <code>this.STATUS.DONE</code>, for example. Should anything need to change, there is <em>one</em> place to do it.</p>
+<h3>Long switch statement</h3>
+<p>Although I am attempting to keep my code DRY, there are certainly a few places where I repeat myself.  The switch case in <code>index.mjs</code> is certainly one of those. I guess I was just excited to use switch case!</p>
+<p>Nonetheless, I remember from many years ago I was playing with creating a text-adventure in Python, and rather than creating a series of <code>if...else</code> statements I used an Object with a hash-map to manage the directions where the player would go. The same design pattern probably works better here as well.</p>
+<p>My first attempt was as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">add</span><span class="o">:</span><span class="w"> </span><span class="nx">createTask</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="mf">1</span><span class="p">]),</span>
+<span class="w">  </span><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="nx">updateTask</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="mf">1</span><span class="p">],</span><span class="w"> </span><span class="nx">args</span><span class="p">[</span><span class="mf">2</span><span class="p">]),</span>
+<span class="w">  </span><span class="ow">delete</span><span class="o">:</span><span class="w"> </span><span class="nx">deleteTask</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="mf">1</span><span class="p">]),</span>
+<span class="w">  </span><span class="nx">todo</span><span class="o">:</span><span class="w"> </span><span class="nx">markTask</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="mf">1</span><span class="p">],</span><span class="w"> </span><span class="nx">taskCLI</span><span class="p">.</span><span class="nx">STATUS</span><span class="p">.</span><span class="nx">TODO</span><span class="p">),</span>
+<span class="w">  </span><span class="s2">"mark-in-progress"</span><span class="o">:</span><span class="w"> </span><span class="nx">markTask</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="mf">1</span><span class="p">],</span><span class="w"> </span><span class="nx">taskCLI</span><span class="p">.</span><span class="nx">STATUS</span><span class="p">.</span><span class="nx">IN_PROGRESS</span><span class="p">),</span>
+<span class="w">  </span><span class="s2">"mark-done"</span><span class="o">:</span><span class="w"> </span><span class="nx">markTask</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="mf">1</span><span class="p">],</span><span class="w"> </span><span class="nx">taskCLI</span><span class="p">.</span><span class="nx">STATUS</span><span class="p">.</span><span class="nx">DONE</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">list</span><span class="o">:</span><span class="w"> </span><span class="nx">listTasks</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="mf">1</span><span class="p">]),</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>This is very much Python-like syntax. The issue is that in JavaScript the code above calls all of those functions the moment that the <code>commands</code> object is defined, rather than using references to those functions to be called later.</p>
+<p>The solution? Arrow functions <a href="https://simpledev.io/lesson/arrow-functions-js/">without parameters</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">add</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">taskCLI</span><span class="p">.</span><span class="nx">createTask</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="mf">1</span><span class="p">]),</span>
+<span class="w">  </span><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">taskCLI</span><span class="p">.</span><span class="nx">updateTask</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="mf">1</span><span class="p">],</span><span class="w"> </span><span class="nx">args</span><span class="p">[</span><span class="mf">2</span><span class="p">]),</span>
+<span class="w">  </span><span class="ow">delete</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">taskCLI</span><span class="p">.</span><span class="nx">deleteTask</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="mf">1</span><span class="p">]),</span>
+<span class="w">  </span><span class="nx">todo</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">taskCLI</span><span class="p">.</span><span class="nx">markTask</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="mf">1</span><span class="p">],</span><span class="w"> </span><span class="nx">taskCLI</span><span class="p">.</span><span class="nx">STATUS</span><span class="p">.</span><span class="nx">TODO</span><span class="p">),</span>
+<span class="w">  </span><span class="s2">"mark-in-progress"</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">taskCLI</span><span class="p">.</span><span class="nx">markTask</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="mf">1</span><span class="p">],</span><span class="w"> </span><span class="nx">taskCLI</span><span class="p">.</span><span class="nx">STATUS</span><span class="p">.</span><span class="nx">IN_PROGRESS</span><span class="p">),</span>
+<span class="w">  </span><span class="s2">"mark-done"</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">taskCLI</span><span class="p">.</span><span class="nx">markTask</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="mf">1</span><span class="p">],</span><span class="w"> </span><span class="nx">taskCLI</span><span class="p">.</span><span class="nx">STATUS</span><span class="p">.</span><span class="nx">DONE</span><span class="p">),</span>
+<span class="w">  </span><span class="nx">list</span><span class="o">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">taskCLI</span><span class="p">.</span><span class="nx">listTasks</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="mf">1</span><span class="p">]),</span>
+<span class="p">};</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">commands</span><span class="p">[</span><span class="nx">args</span><span class="p">[</span><span class="mf">0</span><span class="p">]];</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">command</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">command</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">"Error:"</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">usage</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">usage</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Now, when I run <code>task-cli add "Some task"</code>, the following will happen:</p>
+<ol>
+<li>The "add" argument is passed as a key to <code>commands</code> and assigned to <code>command</code></li>
+<li>If <code>command</code> (in this case, "add") exists, <em>call the value of command</em></li>
+<li><code>() =&gt; taskCLI.createTask("Some task")</code> executes</li>
+<li>The new task is added to the task list and the rest of the code runs</li>
+</ol>
+</article>
+<ul class="main__ul">
+</ul>
+</main>
+<footer>
+<nav class="nav">
+<ul class="nav__ul">
+<li>
+<a href="mailto:elegant.flame6521@fastmail.com" target="_blank">~/email</a>
+</li>
+<li>
+<a href="https://github.com/adnanvaldes" target="_blank">~/github</a>
+</li>
+<li>
+<a href="https://www.linkedin.com/in/adnanvaldes/" target="_blank">~/linkedin</a>
+</li>
+</ul></nav>
+</footer>
+</body>
+</html>
