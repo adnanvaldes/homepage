@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<title>Adnan Valdes</title>
+<meta charset="utf-8" name="charset"/>
+<meta content="Pelican" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://adnanvaldes.pages.dev/theme/css/mustang.css" rel="stylesheet"/>
+<link href="https://adnanvaldes.pages.dev/theme/css/main.css" rel="stylesheet" type="text/css"/>
+<link href="https://adnanvaldes.pages.dev/" rel="alternate" title="Adnan Valdes ATOM Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/feeds/all.atom.xml" rel="alternate" title="Adnan Valdes Full Atom Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/feeds/feed.rss" rel="alternate" title="Adnan Valdes Full RSS Feed" type="application/rss+xml"/>
+</head>
+<body>
+<header class="header">
+<nav class="nav">
+<ul class="nav__ul">
+<li>
+<a href="https://adnanvaldes.pages.dev">~/home/adnan</a>
+</li>
+<li>
+<a href="feeds/atom.xml">~/rss</a>
+</li>
+<li>
+<a href="resume.html">~/resume</a>
+</li>
+<li>
+<a href="archives.html">~/archive</a>
+</li>
+</ul>
+</nav>
+<h1 class="header__h1">Adnan Valdes</h1>
+</header>
+<main>
+<article class="article">
+<h1>[ Add_ssh_key ]</h1>
+<date class="article__date" datetime="2021-02-02">Published: 02 February 2021</date>
+<h2>Generate SSH keys</h2>
+<p><code>ssh-keygen -t [OPTIONS]</code></p>
+<p>Note than RSA should be avoided, unless ed25519 is not available.</p>
+<h2>Configure multiple keys for different servers</h2>
+<p>To manage different keys for different servers, create an ssh config file:</p>
+<p><code>~/.ssh/config</code></p>
+<p>In it, use the following synstax:</p>
+<div class="highlight"><pre><span></span><code>Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/_id_rsa
+  IdentitiesOnly yes
+</code></pre></div>
+<p>Additionally, we can change the <code>Host</code> header while keeping the appropriate <code>HostName</code> to access servers as an alias, such that</p>
+<div class="highlight"><pre><span></span><code>Host myserver
+    HostName ssh.steve.com
+</code></pre></div>
+<p>Allows an SSH connection into <code>ssh.steve.com</code> by simply running <code>ssh myserver</code></p>
+<p>Note, too, that to avoid entering SSH passwords every time we should add
+<code>Host *
+    AddKeysToAgent yes
+    UseKeychain yes</code></p>
+<h2>Send SSH pub key to server</h2>
+<p>Use the <code>ssh-copy-id</code> command to send the appropriate files to the server. Note that if using a different file name (which would be the case if followed above steps), the command structure is as follows:</p>
+<p><code>ssh-copy-id -i ~/.ssh/path/to/key USER@SERVER</code></p>
+<p>Note that the command does NOT require a references to the <code>.pub</code> file, just the key itself.</p>
+<h2>Using hostnames instead of IPs</h2>
+<p>For LAN connections, ensure that a DNS record is set for the host name. On a Pi-Hole, for instance, set a DNS record named <code>anachreon.earth</code> to point at <code>192.168.1.98</code>.</p>
+<p>Then use <code>anachreon.earth</code> in the ssh config file.</p>
+</article>
+<ul class="main__ul">
+</ul>
+</main>
+<footer>
+<nav class="nav">
+<ul class="nav__ul">
+<li>
+<a href="mailto:elegant.flame6521@fastmail.com" target="_blank">~/email</a>
+</li>
+<li>
+<a href="https://github.com/adnanvaldes" target="_blank">~/github</a>
+</li>
+<li>
+<a href="https://www.linkedin.com/in/adnanvaldes/" target="_blank">~/linkedin</a>
+</li>
+</ul></nav>
+</footer>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<title>Adnan Valdes</title>
+<meta charset="utf-8" name="charset"/>
+<meta content="Pelican" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://adnanvaldes.pages.dev/theme/css/mustang.css" rel="stylesheet"/>
+<link href="https://adnanvaldes.pages.dev/theme/css/main.css" rel="stylesheet" type="text/css"/>
+<link href="https://adnanvaldes.pages.dev/" rel="alternate" title="Adnan Valdes ATOM Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/feeds/all.atom.xml" rel="alternate" title="Adnan Valdes Full Atom Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/feeds/feed.rss" rel="alternate" title="Adnan Valdes Full RSS Feed" type="application/rss+xml"/>
+</head>
+<body>
+<header class="header">
+<nav class="nav">
+<ul class="nav__ul">
+<li>
+<a href="https://adnanvaldes.pages.dev">~/home/adnan</a>
+</li>
+<li>
+<a href="feeds/atom.xml">~/rss</a>
+</li>
+<li>
+<a href="resume.html">~/resume</a>
+</li>
+<li>
+<a href="archives.html">~/archive</a>
+</li>
+</ul>
+</nav>
+<h1 class="header__h1">Adnan Valdes</h1>
+</header>
+<main>
+<article class="article">
+<h1>[ Using subpackages in Django ]</h1>
+<date class="article__date" datetime="2024-12-22">Published: 22 December 2024</date>
+<p>I am working on a Learning Management System using Django. It started fairly simply, with <code>startapp lms</code>, a few models defined in a single <code>models.py</code> file, and a basic Django file structure. Eventually, I had to split my models file using Python subpackages to manage the complexity.</p>
+<p>The problem started when my <code>models.py</code> file contained just a few models:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="k">class</span> <span class="nc">Course</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="o">...</span>
+
+
+<span class="k">class</span> <span class="nc">Lesson</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="o">...</span>
+
+
+<span class="k">class</span> <span class="nc">Quiz</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="o">...</span>
+
+
+<span class="k">class</span> <span class="nc">Question</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="o">...</span>
+
+
+<span class="k">class</span> <span class="nc">Answer</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p>As my project grew in size and complexity I found that the <code>models.py</code>, originally concise and manageable, grew into hundreds of lines with multiple semi-related models. For example, at some point I realized that I needed to include a <code>Content</code> model to manage images and videos embedded in the courses. It started simple:</p>
+<div class="highlight"><pre><span></span><code><span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">Content</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p>After a while I realized that are different <em>types</em> of content that the application will use. Around the same time I also realized that I was repeating myself a lot in the LMS models themselves - all of them have similar properties, after all - so I refactored some of the code and created a new file, <code>base_models.py</code> that included <code>BaseModel</code> and <code>BaseContent</code> models.</p>
+<p>This worked for a while, but then I also added three sub-classes to <code>models.py</code>: <code>TextContent</code>, <code>ImageContent</code>, and <code>VideoContent</code>. I expanded the models to include student tracking, using <code>UserQuizAttempt</code> and <code>UserLessonProgress</code>. I started to dread opening the models file: a wall of text, a ton of models, and a lot of mental overhead whenever I wanted to make any change to any one given class. </p>
+<p>This, of course, is a symptom of increasing complexity.</p>
+<p>And because I am in the middle of reading <a href="https://app.thestorygraph.com/books/78431e85-848c-47d2-b4f1-5a86a686e1e4"><em>A Philosophy of Software Design</em></a> I realized that I should embrace one of the first lessons that John Ousterhout teaches: have a zero-tolerance policy towards complexity.</p>
+<p>The problem is that having a single <code>models.py</code> file might suggest that things are less complex; a single file, presumably, is less complex than a multitude of files. As the file grows, however, the maintenance of that file becomes a challenge - from locating specific models, managing merge conflicts, and separating logic related to each part of the program. </p>
+<p>One solution is to create separate Django apps inside the project, but this creates a rather large series of imports I'll need all over the place, with models that depend on each other scattered across multiple apps, and a multitude of empty and mostly-empty files. Perhaps this solution works for a large software organization, but in my case I suspect it is overkill.</p>
+<h3>Python Subpackages</h3>
+<p>The solution I settled with was, first of all, to remember that Django is still just Python. And because it's just Python I can use <a href="https://docs.python.org/3/tutorial/modules.html#packages">packages</a> to manage my code. I don't mean creating something and placing it in the PyPi; I mean creating a folder called <code>models</code>, adding separate files that contain logic for each part of the LMS, and then importing all of them in <code>__init__.py</code>:</p>
+<div class="highlight"><pre><span></span><code>lms/
+├──<span class="w"> </span>models/
+│<span class="w">   </span>├──<span class="w"> </span>__init__.py
+│<span class="w">   </span>├──<span class="w"> </span>base.py
+│<span class="w">   </span>├──<span class="w"> </span>choices.py
+│<span class="w">   </span>├──<span class="w"> </span>content.py
+│<span class="w">   </span>├──<span class="w"> </span>courses.py
+│<span class="w">   </span>├──<span class="w"> </span>quizzes.py
+│<span class="w">   </span>└──<span class="w"> </span>progress.py
+</code></pre></div>
+<p>To reference <em>A  Philosophy Of Software Design</em> again, this organization allows me to maintain the same <em>interface</em> to the models while hiding away the complexity of the code. Because of the <code>__init__.py</code>  file, Python seems the <code>models</code> folder as a package which can be imported - the specifics of the package itself (what classes and such are loaded) are then handled by <code>__init__</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># __init__.py</span>
+
+<span class="kn">from</span> <span class="nn">.courses</span> <span class="kn">import</span> <span class="n">Course</span><span class="p">,</span> <span class="n">Lesson</span><span class="p">,</span> <span class="n">Topic</span>
+<span class="kn">from</span> <span class="nn">.quizzes</span> <span class="kn">import</span> <span class="n">Quiz</span><span class="p">,</span> <span class="n">Question</span><span class="p">,</span> <span class="n">Answer</span>
+<span class="kn">from</span> <span class="nn">.content</span> <span class="kn">import</span> <span class="n">TextContent</span><span class="p">,</span> <span class="n">ImageContent</span><span class="p">,</span> <span class="n">VideoContent</span>
+<span class="kn">from</span> <span class="nn">.progress</span> <span class="kn">import</span> <span class="n">UserLessonProgress</span><span class="p">,</span> <span class="n">UserQuizAttempt</span>
+</code></pre></div>
+<p>With this, the rest of the code in the project can continue to make calls to <code>lms.models</code> and import data using <code>from lms.models import Course</code> without having to know that the structure of the models code has changed. This means I don't have to installed a new app in <code>settings.py</code>, I don't have to rename models, or really do any extra work. At the same time, I have separate files that deal with each individual part of the LMS components.</p>
+</article>
+<ul class="main__ul">
+</ul>
+</main>
+<footer>
+<nav class="nav">
+<ul class="nav__ul">
+<li>
+<a href="mailto:elegant.flame6521@fastmail.com" target="_blank">~/email</a>
+</li>
+<li>
+<a href="https://github.com/adnanvaldes" target="_blank">~/github</a>
+</li>
+<li>
+<a href="https://www.linkedin.com/in/adnanvaldes/" target="_blank">~/linkedin</a>
+</li>
+</ul></nav>
+</footer>
+</body>
+</html>

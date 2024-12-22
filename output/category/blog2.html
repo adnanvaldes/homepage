@@ -6,10 +6,10 @@
 <meta charset="utf-8" name="charset"/>
 <meta content="Pelican" name="generator"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<link href="../theme/css/mustang.css" rel="stylesheet"/>
-<link href="../theme/css/main.css" rel="stylesheet" type="text/css"/>
-<link href="../" rel="alternate" title="Adnan Valdes ATOM Feed" type="application/atom+xml"/>
-<link href="https://adnanvaldes.pages.dev/feeds/atom.xml" rel="alternate" title="Adnan Valdes Full Atom Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/theme/css/mustang.css" rel="stylesheet"/>
+<link href="https://adnanvaldes.pages.dev/theme/css/main.css" rel="stylesheet" type="text/css"/>
+<link href="https://adnanvaldes.pages.dev/" rel="alternate" title="Adnan Valdes ATOM Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/feeds/all.atom.xml" rel="alternate" title="Adnan Valdes Full Atom Feed" type="application/atom+xml"/>
 <link href="https://adnanvaldes.pages.dev/feeds/feed.rss" rel="alternate" title="Adnan Valdes Full RSS Feed" type="application/rss+xml"/>
 </head>
 <body>
@@ -33,6 +33,65 @@
 <h1 class="header__h1">Adnan Valdes</h1>
 </header>
 <main>
+<article class="article">
+<h2 class="article__h2"><a href="/202412221228.html">[ Using subpackages in Django ]</a></h2>
+<date class="article__date" datetime="2024-12-22">Published: 22 December 2024</date>
+<p>I am working on a Learning Management System using Django. It started fairly simply, with <code>startapp lms</code>, a few models defined in a single <code>models.py</code> file, and a basic Django file structure. Eventually, I had to split my models file using Python subpackages to manage the complexity.</p>
+<p>The problem started when my <code>models.py</code> file contained just a few models:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="k">class</span> <span class="nc">Course</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="o">...</span>
+
+
+<span class="k">class</span> <span class="nc">Lesson</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="o">...</span>
+
+
+<span class="k">class</span> <span class="nc">Quiz</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="o">...</span>
+
+
+<span class="k">class</span> <span class="nc">Question</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="o">...</span>
+
+
+<span class="k">class</span> <span class="nc">Answer</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p>As my project grew in size and complexity I found that the <code>models.py</code>, originally concise and manageable, grew into hundreds of lines with multiple semi-related models. For example, at some point I realized that I needed to include a <code>Content</code> model to manage images and videos embedded in the courses. It started simple:</p>
+<div class="highlight"><pre><span></span><code><span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">Content</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p>After a while I realized that are different <em>types</em> of content that the application will use. Around the same time I also realized that I was repeating myself a lot in the LMS models themselves - all of them have similar properties, after all - so I refactored some of the code and created a new file, <code>base_models.py</code> that included <code>BaseModel</code> and <code>BaseContent</code> models.</p>
+<p>This worked for a while, but then I also added three sub-classes to <code>models.py</code>: <code>TextContent</code>, <code>ImageContent</code>, and <code>VideoContent</code>. I expanded the models to include student tracking, using <code>UserQuizAttempt</code> and <code>UserLessonProgress</code>. I started to dread opening the models file: a wall of text …</p>
+</article>
+<article class="article">
+<h2 class="article__h2"><a href="/202411180838.html">[ Nice Renice ]</a></h2>
+<date class="article__date" datetime="2024-11-18">Published: 18 November 2024</date>
+<h2>How nice are your processes?</h2>
+<p>The <a href="vault/top.md">top</a> command has a row labelled "%Cpu(s)". It looks like this:</p>
+<div class="highlight"><pre><span></span><code><span class="c">%Cpu(s):  1.7 us,  0.6 sy,  0.0 ni, 97.1 id,  0.0 wa,  0.6 hi,  0.0 si,  0.0 st`</span>
+</code></pre></div>
+<p>Here is what <code>man top</code> has to say about them:</p>
+<div class="highlight"><pre><span></span><code><span class="n">us</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="n">running</span><span class="w"> </span><span class="n">un</span><span class="o">-</span><span class="n">niced</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="n">processes</span>
+<span class="n">sy</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="n">running</span><span class="w"> </span><span class="n">kernel</span><span class="w"> </span><span class="n">processes</span>
+<span class="n">ni</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="n">running</span><span class="w"> </span><span class="n">niced</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="n">processes</span>
+<span class="n">id</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="n">spent</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">kernel</span><span class="w"> </span><span class="n">idle</span><span class="w"> </span><span class="n">handler</span>
+<span class="n">wa</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="n">waiting</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">I</span><span class="o">/</span><span class="n">O</span><span class="w"> </span><span class="n">completion</span>
+<span class="n">hi</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="n">spent</span><span class="w"> </span><span class="n">servicing</span><span class="w"> </span><span class="n">hardware</span><span class="w"> </span><span class="n">interrupts</span>
+<span class="n">si</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="n">spent</span><span class="w"> </span><span class="n">servicing</span><span class="w"> </span><span class="n">software</span><span class="w"> </span><span class="n">interrupts</span>
+<span class="n">st</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="n">stolen</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="k">this</span><span class="w"> </span><span class="n">vm</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">hypervisor</span>
+</code></pre></div>
+<p>What even is an <code>un-niced</code> process? </p>
+<p>Basically, Linux has a concept of how "nice" a program is - a value that describes how much priority the process is requesting from the CPU scheduler. In other words, the "nicer" a program is, the less priority it requests, and therefore the more it allows other processes to do their thing (see <a href="https://en.wikipedia.org/wiki/Nice_(Unix)">wikipedia entry</a>).</p>
+<p>And this is incredible, because it means we can define the niceness of a background task, for example, such that we can continue working in the mean time. Consider the following: you run a media server, and you want to compress a bunch of your movies. This is a long term task, and you want to continue serving files in the mean time. You could some thing like this:</p>
+<div class="highlight"><pre><span></span><code>nice -n 19 compress file
+</code></pre></div>
+<p>In general, the higher the niceness value of …</p>
+</article>
 <article class="article">
 <h2 class="article__h2"><a href="/202411171134.html">[ task-cli ]</a></h2>
 <date class="article__date" datetime="2024-11-17">Published: 17 November 2024</date>
@@ -135,6 +194,45 @@ As of version 3.10, Python has a "structural pattern matching" feature introduce
 <p>I know I have been yearning for this for a little while now. In 2022 I experienced a slow drop-off from open world RPG games. For instance …</p>
 </article>
 <article class="article">
+<h2 class="article__h2"><a href="/data.html">[ Data ]</a></h2>
+<date class="article__date" datetime="2022-12-07">Published: 07 December 2022</date>
+<h2>Problem domain vs program</h2>
+<p>In a problem domain we have information regarding how the system works. For example, in a programn about traffic lights the problem domain will include <em>information</em> about the state of the lights - red, yellow, green. The program itself, however, will <em>represent</em> the information using <em>data</em> in the program - for example, representing a red light as the natural 0.</p>
+<p>The inverse of the relationship is that we can <em>interpret</em> the state of the data, the natural 0 for example, as a red light.</p>
+<h2>Data definitions to describe how we represent data</h2>
+<p>Begin with a data definition that represents the information at hand. For example, for a traffic light problem, we might say the following:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">;; Data:</span>
+
+<span class="c1">;; TLColor is one of:</span>
+<span class="c1">;; - 0</span>
+<span class="c1">;; - 1</span>
+<span class="c1">;; - 2</span>
+<span class="c1">;; interp. color of a traffic light - 0 is red, 1 yellow, 2 green</span>
+<span class="c">#;</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fn-for-tlcolor</span><span class="w"> </span><span class="n">c</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">[(</span><span class="nb">=</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">...</span><span class="p">)]</span>
+<span class="w">          </span><span class="p">[(</span><span class="nb">=</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">...</span><span class="p">)]</span>
+<span class="w">          </span><span class="n">p</span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">...</span><span class="p">)</span>
+<span class="w">    </span><span class="p">))</span>
+
+<span class="c1">;; Functions:</span>
+
+<span class="c1">;; TLColor -&gt; TLColor ; Note how it only consumes a TLColor, which must be [1,2,3]</span>
+<span class="c1">;; produce next color of traffic light</span>
+<span class="p">(</span><span class="n">check-expect</span><span class="w"> </span><span class="p">(</span><span class="n">next-color</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span><span class="w"> </span><span class="p">(</span><span class="n">next-color</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span><span class="w"> </span><span class="p">(</span><span class="n">next-color</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">; (define (next-color c) 0)</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">next-color</span><span class="w"> </span><span class="n">c</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">[(</span><span class="nb">=</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">]</span>
+<span class="w">          </span><span class="p">[(</span><span class="nb">=</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">]</span>
+<span class="w">          </span><span class="p">[(</span><span class="nb">=</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span>
+<span class="w">    </span><span class="p">))</span>
+</code></pre></div>
+</article>
+<article class="article">
 <h2 class="article__h2"><a href="/202211261850.html">[ A Master of Djinn ]</a></h2>
 <date class="article__date" datetime="2022-11-27">Published: 27 November 2022</date>
 <p><quote>Djinn are a lot like the rest of us,” Fatma said. She plucked a book out of the air that came flying, without stopping her stride. “They just want to know the odd things they’re interested in are appreciated.</quote></p>
@@ -212,6 +310,82 @@ As of version 3.10, Python has a "structural pattern matching" feature introduce
 <p>To set up, I bought the Zork Anthology through Steam. I know Infocom has made Zork 1 - 3 <a href="http://www.infocom-if.org/downloads/downloads.html">available for free</a>, but because this was a fairly late schedule change I decided to go the easy way and shell out $8.00 for the whole set.</p>
 <p>The games themselves work well, but I had a few problems with the set-up. To start with, I have Manjaro installed on all my computers, but the Zork Anthology only has a Windows release on Steam. Not much of an issue in itself: I regularly use Proton to play on Linux and I have had very few problems. However, the thought of running Proton to <em>then</em> run a DOS emulator to play Zork rubbed me the wrong way.</p>
 <p>The other option I've seen is to play Zork through …</p>
+</article>
+<article class="article">
+<h2 class="article__h2"><a href="/admin.html">[ Admin ]</a></h2>
+<date class="article__date" datetime="2021-03-01">Published: 01 March 2021</date>
+<h2>Advanced configuration</h2>
+<p>From registered models, Django automatically includes record indentification via the model's <code>__str__()</code> method. This also includes a bulk delete operation for records of a particular model.</p>
+<p>However, Django also gives us the ability to further customise the interface. We can do things like:</p>
+<ul>
+<li>List views<ul>
+<li>Add additional fields or information for each record</li>
+<li>Add filters to select records</li>
+<li>Add additional options to the actions menu, as well as choose where the menu is</li>
+</ul>
+</li>
+<li>Detail views<ul>
+<li>Choose which fields to display, which to exlucde, their order, grouping, etc.</li>
+<li>Add related fields to a record to allow inline editing</li>
+</ul>
+</li>
+</ul>
+<h3>Register ModelAdmin class</h3>
+<p>To change how a model is displayed on the admin interface we must define and register a <a href="https://docs.djangoproject.com/en/3.1/ref/contrib/admin/#modeladmin-objects">ModelAdmin</a> class, which is used to define the layout of the admin site.</p>
+<p>For example, given the Terminus Library Author model, we can do the following:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># filename: terminus/catalog/admin.py</span>
+
+<span class="c1"># Defining admin class</span>
+<span class="k">class</span> <span class="nc">AuthorAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="c1"># Register the admin class with an associated admin moodel</span>
+<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Author</span><span class="p">,</span> <span class="n">AuthorAdmin</span><span class="p">)</span>
+</code></pre></div>
+<p>Of course, the above admin class is empty, so the views will remain unchanged for now.</p>
+<p>We can also register the models using a decorator on the relevant admin class, like so:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># filename: terminus/catalog/admin.py</span>
+
+<span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Book</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">BookAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<h2>List view</h2>
+<h3>Customise ModelAdmin class</h3>
+<p>By default, Django uses a model's <code>__str__()</code> class to display information on the admin list view. While is is not bad design for smaller projects, once the scale …</p>
+</article>
+<article class="article">
+<h2 class="article__h2"><a href="/add_ssh_key.html">[ Add_ssh_key ]</a></h2>
+<date class="article__date" datetime="2021-02-02">Published: 02 February 2021</date>
+<h2>Generate SSH keys</h2>
+<p><code>ssh-keygen -t [OPTIONS]</code></p>
+<p>Note than RSA should be avoided, unless ed25519 is not available.</p>
+<h2>Configure multiple keys for different servers</h2>
+<p>To manage different keys for different servers, create an ssh config file:</p>
+<p><code>~/.ssh/config</code></p>
+<p>In it, use the following synstax:</p>
+<div class="highlight"><pre><span></span><code>Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/_id_rsa
+  IdentitiesOnly yes
+</code></pre></div>
+<p>Additionally, we can change the <code>Host</code> header while keeping the appropriate <code>HostName</code> to access servers as an alias, such that</p>
+<div class="highlight"><pre><span></span><code>Host myserver
+    HostName ssh.steve.com
+</code></pre></div>
+<p>Allows an SSH connection into <code>ssh.steve.com</code> by simply running <code>ssh myserver</code></p>
+<p>Note, too, that to avoid entering SSH passwords every time we should add
+<code>Host *
+    AddKeysToAgent yes
+    UseKeychain yes</code></p>
+<h2>Send SSH pub key to server</h2>
+<p>Use the <code>ssh-copy-id</code> command to send the appropriate files to the server. Note that if using a different file name (which would be the case if followed above steps), the command structure is as follows:</p>
+<p><code>ssh-copy-id -i ~/.ssh/path/to/key USER@SERVER</code></p>
+<p>Note that the command does NOT require a references to the <code>.pub</code> file, just the key itself.</p>
+<h2>Using hostnames instead of IPs</h2>
+<p>For LAN connections, ensure that a DNS record is set for the host name. On a Pi-Hole, for instance, set a DNS record named <code>anachreon.earth</code> to point at <code>192.168.1.98</code>.</p>
+<p>Then use <code>anachreon.earth</code> in the ssh config file.</p>
 </article>
 <ul class="main__ul">
 <li>

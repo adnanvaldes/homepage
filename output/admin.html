@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<title>Adnan Valdes</title>
+<meta charset="utf-8" name="charset"/>
+<meta content="Pelican" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://adnanvaldes.pages.dev/theme/css/mustang.css" rel="stylesheet"/>
+<link href="https://adnanvaldes.pages.dev/theme/css/main.css" rel="stylesheet" type="text/css"/>
+<link href="https://adnanvaldes.pages.dev/" rel="alternate" title="Adnan Valdes ATOM Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/feeds/all.atom.xml" rel="alternate" title="Adnan Valdes Full Atom Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/feeds/feed.rss" rel="alternate" title="Adnan Valdes Full RSS Feed" type="application/rss+xml"/>
+</head>
+<body>
+<header class="header">
+<nav class="nav">
+<ul class="nav__ul">
+<li>
+<a href="https://adnanvaldes.pages.dev">~/home/adnan</a>
+</li>
+<li>
+<a href="feeds/atom.xml">~/rss</a>
+</li>
+<li>
+<a href="resume.html">~/resume</a>
+</li>
+<li>
+<a href="archives.html">~/archive</a>
+</li>
+</ul>
+</nav>
+<h1 class="header__h1">Adnan Valdes</h1>
+</header>
+<main>
+<article class="article">
+<h1>[ Admin ]</h1>
+<date class="article__date" datetime="2021-03-01">Published: 01 March 2021</date>
+<h2>Advanced configuration</h2>
+<p>From registered models, Django automatically includes record indentification via the model's <code>__str__()</code> method. This also includes a bulk delete operation for records of a particular model.</p>
+<p>However, Django also gives us the ability to further customise the interface. We can do things like:</p>
+<ul>
+<li>List views<ul>
+<li>Add additional fields or information for each record</li>
+<li>Add filters to select records</li>
+<li>Add additional options to the actions menu, as well as choose where the menu is</li>
+</ul>
+</li>
+<li>Detail views<ul>
+<li>Choose which fields to display, which to exlucde, their order, grouping, etc.</li>
+<li>Add related fields to a record to allow inline editing</li>
+</ul>
+</li>
+</ul>
+<h3>Register ModelAdmin class</h3>
+<p>To change how a model is displayed on the admin interface we must define and register a <a href="https://docs.djangoproject.com/en/3.1/ref/contrib/admin/#modeladmin-objects">ModelAdmin</a> class, which is used to define the layout of the admin site.</p>
+<p>For example, given the Terminus Library Author model, we can do the following:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># filename: terminus/catalog/admin.py</span>
+
+<span class="c1"># Defining admin class</span>
+<span class="k">class</span> <span class="nc">AuthorAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="c1"># Register the admin class with an associated admin moodel</span>
+<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Author</span><span class="p">,</span> <span class="n">AuthorAdmin</span><span class="p">)</span>
+</code></pre></div>
+<p>Of course, the above admin class is empty, so the views will remain unchanged for now.</p>
+<p>We can also register the models using a decorator on the relevant admin class, like so:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># filename: terminus/catalog/admin.py</span>
+
+<span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Book</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">BookAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<h2>List view</h2>
+<h3>Customise ModelAdmin class</h3>
+<p>By default, Django uses a model's <code>__str__()</code> class to display information on the admin list view. While is is not bad design for smaller projects, once the scale increases it may be necessary to change the display to differentiate records more easily.</p>
+<p>For example, let's say we want to display authors in the list view with entries for <code>Sname</code>, <code>Fname</code>, <code>DOB</code>, <code>DOD</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># filename: terminus/catalog/admin.py</span>
+
+<span class="k">class</span> <span class="nc">AuthorAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'sname'</span><span class="p">,</span> <span class="s1">'fname'</span><span class="p">,</span> <span class="s1">'date_of_birth'</span><span class="p">,</span> <span class="s1">'date_of_death'</span><span class="p">)</span>
+</code></pre></div>
+<h3>Dealing with ManyToManyFields</h3>
+<p>Continuing with Terminus Library, if we want a book in the list view to show its title, author, and genre, we might register an admin class like so:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">BookAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'title'</span><span class="p">,</span> <span class="s1">'author'</span><span class="p">,</span> <span class="s1">'display_genre'</span><span class="p">)</span>
+</code></pre></div>
+<p>The <code>display_genre</code> is a method we add into the Book model. In other words, we can use a method's name here to display it in the list view. Generally we may want to avoid having Django make costly database calls once the DB grows to a certain size.</p>
+<p>To make the above work, the <code>Book</code> model must be changed to include the following method:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># filename: terminus/catalog/admin.py</span>
+
+<span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">display_genre</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Create a string for the Genre, used to display genre in Admin"""</span>
+        <span class="k">return</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">genre</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">genre</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">genre</span><span class="o">.</span><span class="n">all</span><span class="p">()[:</span><span class="mi">3</span><span class="p">])</span>
+
+    <span class="n">display_genre</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s2">"Genre"</span>
+</code></pre></div>
+<h3>Adding list filters</h3>
+<p>As the list of items in the admin page grows, it can be useful to create filters. This is done by listing fields in the <code>ModelAdmin</code> <code>list_filter</code> attribute. For instance:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">#filename: terminus/catalog/admin.py</span>
+<span class="k">class</span> <span class="nc">BookInstanceAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'status'</span><span class="p">,</span> <span class="s1">'due_back'</span><span class="p">)</span>
+</code></pre></div>
+<h2>Detail view</h2>
+<h3>Organizing detail view layout</h3>
+<p>By default, the detail views lay out the fields vertically in the order that they were declared in a model. To do this, we simply add a <code>fields</code> list attribute to the relevant model:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># filename: terminus/catalog/admin.py</span>
+
+<span class="k">class</span> <span class="nc">AuthorAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="o">...</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'fname'</span><span class="p">,</span> <span class="s1">'sname'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'date_of_birth'</span><span class="p">,</span> <span class="s1">'date_of_death'</span><span class="p">)]</span>
+</code></pre></div>
+<p>The <code>fields</code> attribute simply declares in what order the fields will be shown on the detail view. Fields are displayed vertically by default, one after the other; however, we can use tuples to show them horizontally.</p>
+<p>We can also include an <code>exclude</code> attribute to specify which model attributes to hide.</p>
+<h3>Sectioning detail view</h3>
+<p>In the detail view, in addition to organizing the field display orders, we can create sections to group related model information using <a href="https://docs.djangoproject.com/en/3.1/ref/contrib/admin/#django.contrib.admin.ModelAdmin.fieldsets">fieldsets</a>.</p>
+<p>For example, if we want to create a section for the <code>BookInstance</code> model that refers to book-specific attributes and another that refers to availability, we might do the following:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># filename: terminus/catalog/admin.py</span>
+
+<span class="k">class</span> <span class="nc">BookInstanceAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="o">...</span>
+    <span class="n">fieldsets</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="p">{</span> <span class="c1"># The first item of the tuple is the name of the section</span>
+            <span class="s1">'fields'</span><span class="p">:(</span><span class="s1">'book'</span><span class="p">,</span><span class="s1">'imprint'</span><span class="p">,</span><span class="s1">'id'</span><span class="p">)</span>
+        <span class="p">}),</span>
+        <span class="p">(</span><span class="s1">'Availability'</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s1">'fields'</span><span class="p">:(</span><span class="s1">'status'</span><span class="p">,</span><span class="s1">'due_back'</span><span class="p">)</span>
+        <span class="p">})</span>
+    <span class="p">)</span>
+</code></pre></div>
+<h2>Inline editing of associated records</h2>
+<p>If we want the ability to add associated records at the same time, we can use inline editing. This may be useful, for example, if we want to add information about both a book and about a specific copy of a book.</p>
+<p>This is achieved by using <a href="https://docs.djangoproject.com/en/3.1/ref/contrib/admin/#django.contrib.admin.ModelAdmin.inlines">inline</a> classes, of type <code>TabularInline</code> for horizontal layouts or <code>StackedInline</code> for vertical layouts.</p>
+<p>For instance:
+```Python</p>
+<h1>filename: terminus/catalog/admin.py</h1>
+<p>class BooksInstanceInline(admin.TabularInline):
+    model = BookInstance</p>
+<p>@admin.register(Book)
+class BookAdmin(admin.ModelAdmin):
+    ...
+    ...
+    inlines = [BookInstanceInline]</p>
+<h2>Ref</h2>
+<p><a href="https://docs.djangoproject.com/en/3.1/ref/contrib/admin/">Django Admin Site</a></p>
+</article>
+<ul class="main__ul">
+</ul>
+</main>
+<footer>
+<nav class="nav">
+<ul class="nav__ul">
+<li>
+<a href="mailto:elegant.flame6521@fastmail.com" target="_blank">~/email</a>
+</li>
+<li>
+<a href="https://github.com/adnanvaldes" target="_blank">~/github</a>
+</li>
+<li>
+<a href="https://www.linkedin.com/in/adnanvaldes/" target="_blank">~/linkedin</a>
+</li>
+</ul></nav>
+</footer>
+</body>
+</html>

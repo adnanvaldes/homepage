@@ -1,5 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Adnan Valdes</title><link>https://adnanvaldes.pages.dev/</link><description/><lastBuildDate>Sun, 17 Nov 2024 14:28:36 -0800</lastBuildDate><item><title>task-cli</title><link>https://adnanvaldes.pages.dev/202411171134.html</link><description>&lt;p&gt;&lt;a href="https://github.com/adnanvaldes/task-cli"&gt;&lt;code&gt;task-cli&lt;/code&gt;&lt;/a&gt; is the first project I'm working on from &lt;a href="https://roadmap.sh"&gt;roadmap.sh&lt;/a&gt; as part of their &lt;a href="https://roadmap.sh/backend/projects"&gt;Backend Projects&lt;/a&gt;.&lt;/p&gt;
+<rss version="2.0"><channel><title>Adnan Valdes</title><link>https://adnanvaldes.pages.dev/</link><description/><lastBuildDate>Sun, 22 Dec 2024 13:25:27 -0800</lastBuildDate><item><title>Using subpackages in Django</title><link>https://adnanvaldes.pages.dev/202412221228.html</link><description>&lt;p&gt;I am working on a Learning Management System using Django. It started fairly simply, with &lt;code&gt;startapp lms&lt;/code&gt;, a few models defined in a single &lt;code&gt;models.py&lt;/code&gt; file, and a basic Django file structure. Eventually, I had to split my models file using Python subpackages to manage the complexity.&lt;/p&gt;
+&lt;p&gt;The problem started when my &lt;code&gt;models.py&lt;/code&gt; file contained just a few models:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.db&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Course&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Lesson&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Quiz&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Question&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Answer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;As my project grew in size and complexity I found that the &lt;code&gt;models.py&lt;/code&gt;, originally concise and manageable, grew into hundreds of lines with multiple semi-related models. For example, at some point I realized that I needed to include a &lt;code&gt;Content&lt;/code&gt; model to manage images and videos embedded in the courses. It started simple:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="o"&gt;...&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Content&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;After a while I realized that are different &lt;em&gt;types&lt;/em&gt; of content that the application will use. Around the same time I also realized that I was repeating myself a lot in the LMS models themselves - all of them have similar properties, after all - so I refactored some of the code and created a new file, &lt;code&gt;base_models.py&lt;/code&gt; that included &lt;code&gt;BaseModel&lt;/code&gt; and &lt;code&gt;BaseContent&lt;/code&gt; models.&lt;/p&gt;
+&lt;p&gt;This worked for a while, but then I also added three sub-classes to &lt;code&gt;models.py&lt;/code&gt;: &lt;code&gt;TextContent&lt;/code&gt;, &lt;code&gt;ImageContent&lt;/code&gt;, and &lt;code&gt;VideoContent&lt;/code&gt;. I expanded the models to include student tracking, using &lt;code&gt;UserQuizAttempt&lt;/code&gt; and &lt;code&gt;UserLessonProgress&lt;/code&gt;. I started to dread opening the models file: a wall of text …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Adnan Valdes</dc:creator><pubDate>Sun, 22 Dec 2024 00:00:00 -0800</pubDate><guid isPermaLink="false">tag:adnanvaldes.pages.dev,2024-12-22:/202412221228.html</guid><category>blog</category><category>django</category></item><item><title>Nice Renice</title><link>https://adnanvaldes.pages.dev/202411180838.html</link><description>&lt;h2&gt;How nice are your processes?&lt;/h2&gt;
+&lt;p&gt;The &lt;a href="vault/top.md"&gt;top&lt;/a&gt; command has a row labelled "%Cpu(s)". It looks like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c"&gt;%Cpu(s):  1.7 us,  0.6 sy,  0.0 ni, 97.1 id,  0.0 wa,  0.6 hi,  0.0 si,  0.0 st`&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Here is what &lt;code&gt;man top&lt;/code&gt; has to say about them:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;us&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;running&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;un&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;niced&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;processes&lt;/span&gt;
+&lt;span class="n"&gt;sy&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;running&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;processes&lt;/span&gt;
+&lt;span class="n"&gt;ni&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;running&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;niced&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;processes&lt;/span&gt;
+&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;spent&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;in&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;the&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;idle&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;handler&lt;/span&gt;
+&lt;span class="n"&gt;wa&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;waiting&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;I&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;O&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;completion&lt;/span&gt;
+&lt;span class="n"&gt;hi&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;spent&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;servicing&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;hardware&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;interrupts&lt;/span&gt;
+&lt;span class="n"&gt;si&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;spent&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;servicing&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;software&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;interrupts&lt;/span&gt;
+&lt;span class="n"&gt;st&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;stolen&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;from&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;vm&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;by&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;the&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;hypervisor&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;What even is an &lt;code&gt;un-niced&lt;/code&gt; process? &lt;/p&gt;
+&lt;p&gt;Basically, Linux has a concept of how "nice" a program is - a value that describes how much priority the process is requesting from the CPU scheduler. In other words, the "nicer" a program is, the less priority it requests, and therefore the more it allows other processes to do their thing (see &lt;a href="https://en.wikipedia.org/wiki/Nice_(Unix)"&gt;wikipedia entry&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;And this is incredible, because it means we can define the niceness of a background task, for example, such that we can continue working in the mean time. Consider the following: you run a media server, and you want to compress a bunch of your movies. This is a long term task, and you want to continue serving files in the mean time. You could some thing like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;nice -n 19 compress file
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;In general, the higher the niceness value of …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Adnan Valdes</dc:creator><pubDate>Mon, 18 Nov 2024 00:00:00 -0800</pubDate><guid isPermaLink="false">tag:adnanvaldes.pages.dev,2024-11-18:/202411180838.html</guid><category>blog</category></item><item><title>task-cli</title><link>https://adnanvaldes.pages.dev/202411171134.html</link><description>&lt;p&gt;&lt;a href="https://github.com/adnanvaldes/task-cli"&gt;&lt;code&gt;task-cli&lt;/code&gt;&lt;/a&gt; is the first project I'm working on from &lt;a href="https://roadmap.sh"&gt;roadmap.sh&lt;/a&gt; as part of their &lt;a href="https://roadmap.sh/backend/projects"&gt;Backend Projects&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;I decided to write it in JavaScript using Node.js rather than defaulting to my go-to of Python because I wanted to learn how those two work, given how ubiquitous they are.&lt;/p&gt;
 &lt;p&gt;The major objective here was to get started with JavaScript and NodeJs. While I don't know that my code is quite idiomatic yet, at least I'm feeling more comfortable with the syntax and some of the build-in functionality.&lt;/p&gt;
 &lt;p&gt;One of the things I was excited to use was &lt;code&gt;switch case&lt;/code&gt; statements. In previous Python code, for example, I've used (but tried to avoid!) series of &lt;code&gt;if...else&lt;/code&gt; statements:&lt;/p&gt;
@@ -74,7 +128,41 @@ As of version 3.10, Python has a "structural pattern matching" feature introduce
 &lt;p&gt;To solve this, I made ample use of conditionals. The idea is to check whether the ball is above or bellow the paddle and then to …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Adnan Valdes</dc:creator><pubDate>Fri, 23 Dec 2022 00:00:00 -0800</pubDate><guid isPermaLink="false">tag:adnanvaldes.pages.dev,2022-12-23:/202212231346.html</guid><category>blog</category><category>gamedev</category><category>cs</category><category>programming</category></item><item><title>Year of Reflection</title><link>https://adnanvaldes.pages.dev/202212201918.html</link><description>&lt;p&gt;For 2023, I am looking for more solidity. Something foundational, basic - a framework upon which I can prop up and build other aspects of my life. I suppose that a way to think about it is in the context of goals; far too often I feel like I am wasting time rather than living intentionally, swept up by currents that I often see coming but whose course and final destination I cannot fathom.&lt;/p&gt;
 &lt;p&gt;Yet in themselves goals cannot possibly achieve this. At best they are milestone markers of events that occurred prior, up to the point when they are complete, and at worst simply reminders of all the things that were &lt;em&gt;not&lt;/em&gt; accomplished. My interest here is far more organic, to have something that is growing and always present, not in the future or the past.&lt;/p&gt;
 &lt;p&gt;Perhaps a different way of thinking about it is in terms of story or narrative. One aspect that attracts me a lot from narrative arcs is that they feel coherent, that there is not wasted breath - think of Chekhov and his gun. There may be specific goals in narrative, but nobody reads fiction because of milestones within the story itself: the narratives are in constant motion.  I understand that life itself is not structured in such a way necessarily, but even an approximation would be well received. &lt;/p&gt;
-&lt;p&gt;I know I have been yearning for this for a little while now. In 2022 I experienced a slow drop-off from open world RPG games. For instance …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Adnan Valdes</dc:creator><pubDate>Tue, 20 Dec 2022 00:00:00 -0800</pubDate><guid isPermaLink="false">tag:adnanvaldes.pages.dev,2022-12-20:/202212201918.html</guid><category>blog</category><category>health</category><category>blog</category><category>writing</category></item><item><title>A Master of Djinn</title><link>https://adnanvaldes.pages.dev/202211261850.html</link><description>&lt;p&gt;&lt;quote&gt;Djinn are a lot like the rest of us,” Fatma said. She plucked a book out of the air that came flying, without stopping her stride. “They just want to know the odd things they’re interested in are appreciated.&lt;/quote&gt;&lt;/p&gt;
+&lt;p&gt;I know I have been yearning for this for a little while now. In 2022 I experienced a slow drop-off from open world RPG games. For instance …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Adnan Valdes</dc:creator><pubDate>Tue, 20 Dec 2022 00:00:00 -0800</pubDate><guid isPermaLink="false">tag:adnanvaldes.pages.dev,2022-12-20:/202212201918.html</guid><category>blog</category><category>health</category><category>blog</category><category>writing</category></item><item><title>Data</title><link>https://adnanvaldes.pages.dev/data.html</link><description>&lt;h2&gt;Problem domain vs program&lt;/h2&gt;
+&lt;p&gt;In a problem domain we have information regarding how the system works. For example, in a programn about traffic lights the problem domain will include &lt;em&gt;information&lt;/em&gt; about the state of the lights - red, yellow, green. The program itself, however, will &lt;em&gt;represent&lt;/em&gt; the information using &lt;em&gt;data&lt;/em&gt; in the program - for example, representing a red light as the natural 0.&lt;/p&gt;
+&lt;p&gt;The inverse of the relationship is that we can &lt;em&gt;interpret&lt;/em&gt; the state of the data, the natural 0 for example, as a red light.&lt;/p&gt;
+&lt;h2&gt;Data definitions to describe how we represent data&lt;/h2&gt;
+&lt;p&gt;Begin with a data definition that represents the information at hand. For example, for a traffic light problem, we might say the following:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;;; Data:&lt;/span&gt;
+
+&lt;span class="c1"&gt;;; TLColor is one of:&lt;/span&gt;
+&lt;span class="c1"&gt;;; - 0&lt;/span&gt;
+&lt;span class="c1"&gt;;; - 1&lt;/span&gt;
+&lt;span class="c1"&gt;;; - 2&lt;/span&gt;
+&lt;span class="c1"&gt;;; interp. color of a traffic light - 0 is red, 1 yellow, 2 green&lt;/span&gt;
+&lt;span class="c"&gt;#;&lt;/span&gt;
+&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;define&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fn-for-tlcolor&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;cond&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="nb"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;...&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;span class="w"&gt;          &lt;/span&gt;&lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="nb"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;...&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;span class="w"&gt;          &lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;...&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+&lt;span class="c1"&gt;;; Functions:&lt;/span&gt;
+
+&lt;span class="c1"&gt;;; TLColor -&amp;gt; TLColor ; Note how it only consumes a TLColor, which must be [1,2,3]&lt;/span&gt;
+&lt;span class="c1"&gt;;; produce next color of traffic light&lt;/span&gt;
+&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check-expect&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;next-color&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check-expect&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;next-color&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check-expect&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;next-color&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;; (define (next-color c) 0)&lt;/span&gt;
+
+&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;define&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;next-color&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;cond&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="nb"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="w"&gt;          &lt;/span&gt;&lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="nb"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="w"&gt;          &lt;/span&gt;&lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="nb"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Adnan Valdes</dc:creator><pubDate>Wed, 07 Dec 2022 00:00:00 -0800</pubDate><guid isPermaLink="false">tag:adnanvaldes.pages.dev,2022-12-07:/data.html</guid><category>blog</category></item><item><title>A Master of Djinn</title><link>https://adnanvaldes.pages.dev/202211261850.html</link><description>&lt;p&gt;&lt;quote&gt;Djinn are a lot like the rest of us,” Fatma said. She plucked a book out of the air that came flying, without stopping her stride. “They just want to know the odd things they’re interested in are appreciated.&lt;/quote&gt;&lt;/p&gt;
 &lt;p&gt;I finished reading P. Djèlí Clark's &lt;em&gt;A Master Of Djinn&lt;/em&gt; last night. I came across it after scanning the 2021 Nebula Awards.  It's not my usual type of novel - for the most part I look for hard sci-fi space operas with big spaceships and galactic scale events.&lt;/p&gt;
 &lt;p&gt;I should point out, too, that &lt;em&gt;A Master Of Djinn&lt;/em&gt; had big shoes to fill. It won the award, but one of the other nominations was Arkady Martine's &lt;em&gt;A Desolation called Peace&lt;/em&gt; which is now one of my favourite books and an absolutely fascinating universe.&lt;/p&gt;
 &lt;p&gt;Imagine my surprise then when I was maybe 30 pages in and immediately hooked and amazed at the world that Clark created. The story line itself is not particularly complex: we follow an investigator who is trying to solve a murder. &lt;/p&gt;
@@ -118,4 +206,74 @@ As of version 3.10, Python has a "structural pattern matching" feature introduce
 &lt;p&gt;Text adventures are also excellent candidates for in-flight entertainment on long-haul routes. I recently travelled to Delhi from Vancouver, on a flight that was scheduled 3 days after the beginning of the Russian invasion of Ukraine. Because of the closure of Russian airspace to most airlines, my route was YVR -&amp;gt; YYZ (3 hour stop) YYZ -&amp;gt; Delhi. In other words, the ETE changed from about 13 hours to just over 22 hours.&lt;/p&gt;
 &lt;p&gt;To set up, I bought the Zork Anthology through Steam. I know Infocom has made Zork 1 - 3 &lt;a href="http://www.infocom-if.org/downloads/downloads.html"&gt;available for free&lt;/a&gt;, but because this was a fairly late schedule change I decided to go the easy way and shell out $8.00 for the whole set.&lt;/p&gt;
 &lt;p&gt;The games themselves work well, but I had a few problems with the set-up. To start with, I have Manjaro installed on all my computers, but the Zork Anthology only has a Windows release on Steam. Not much of an issue in itself: I regularly use Proton to play on Linux and I have had very few problems. However, the thought of running Proton to &lt;em&gt;then&lt;/em&gt; run a DOS emulator to play Zork rubbed me the wrong way.&lt;/p&gt;
-&lt;p&gt;The other option I've seen is to play Zork through …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Adnan Valdes</dc:creator><pubDate>Mon, 07 Mar 2022 00:00:00 -0800</pubDate><guid isPermaLink="false">tag:adnanvaldes.pages.dev,2022-03-07:/202203071616.html</guid><category>blog</category><category>cs</category><category>linux</category><category>project</category></item></channel></rss>
+&lt;p&gt;The other option I've seen is to play Zork through …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Adnan Valdes</dc:creator><pubDate>Mon, 07 Mar 2022 00:00:00 -0800</pubDate><guid isPermaLink="false">tag:adnanvaldes.pages.dev,2022-03-07:/202203071616.html</guid><category>blog</category><category>cs</category><category>linux</category><category>project</category></item><item><title>Admin</title><link>https://adnanvaldes.pages.dev/admin.html</link><description>&lt;h2&gt;Advanced configuration&lt;/h2&gt;
+&lt;p&gt;From registered models, Django automatically includes record indentification via the model's &lt;code&gt;__str__()&lt;/code&gt; method. This also includes a bulk delete operation for records of a particular model.&lt;/p&gt;
+&lt;p&gt;However, Django also gives us the ability to further customise the interface. We can do things like:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;List views&lt;ul&gt;
+&lt;li&gt;Add additional fields or information for each record&lt;/li&gt;
+&lt;li&gt;Add filters to select records&lt;/li&gt;
+&lt;li&gt;Add additional options to the actions menu, as well as choose where the menu is&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Detail views&lt;ul&gt;
+&lt;li&gt;Choose which fields to display, which to exlucde, their order, grouping, etc.&lt;/li&gt;
+&lt;li&gt;Add related fields to a record to allow inline editing&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Register ModelAdmin class&lt;/h3&gt;
+&lt;p&gt;To change how a model is displayed on the admin interface we must define and register a &lt;a href="https://docs.djangoproject.com/en/3.1/ref/contrib/admin/#modeladmin-objects"&gt;ModelAdmin&lt;/a&gt; class, which is used to define the layout of the admin site.&lt;/p&gt;
+&lt;p&gt;For example, given the Terminus Library Author model, we can do the following:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# filename: terminus/catalog/admin.py&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Defining admin class&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;AuthorAdmin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;admin&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ModelAdmin&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;pass&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Register the admin class with an associated admin moodel&lt;/span&gt;
+&lt;span class="n"&gt;admin&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;site&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;register&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Author&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;AuthorAdmin&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Of course, the above admin class is empty, so the views will remain unchanged for now.&lt;/p&gt;
+&lt;p&gt;We can also register the models using a decorator on the relevant admin class, like so:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# filename: terminus/catalog/admin.py&lt;/span&gt;
+
+&lt;span class="nd"&gt;@admin&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;register&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Book&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;BookAdmin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;admin&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ModelAdmin&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;List view&lt;/h2&gt;
+&lt;h3&gt;Customise ModelAdmin class&lt;/h3&gt;
+&lt;p&gt;By default, Django uses a model's &lt;code&gt;__str__()&lt;/code&gt; class to display information on the admin list view. While is is not bad design for smaller projects, once the scale …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Adnan Valdes</dc:creator><pubDate>Mon, 01 Mar 2021 00:00:00 -0800</pubDate><guid isPermaLink="false">tag:adnanvaldes.pages.dev,2021-03-01:/admin.html</guid><category>blog</category></item><item><title>Add_ssh_key</title><link>https://adnanvaldes.pages.dev/add_ssh_key.html</link><description>&lt;h2&gt;Generate SSH keys&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;ssh-keygen -t [OPTIONS]&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Note than RSA should be avoided, unless ed25519 is not available.&lt;/p&gt;
+&lt;h2&gt;Configure multiple keys for different servers&lt;/h2&gt;
+&lt;p&gt;To manage different keys for different servers, create an ssh config file:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;~/.ssh/config&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;In it, use the following synstax:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/_id_rsa
+  IdentitiesOnly yes
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Additionally, we can change the &lt;code&gt;Host&lt;/code&gt; header while keeping the appropriate &lt;code&gt;HostName&lt;/code&gt; to access servers as an alias, such that&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Host myserver
+    HostName ssh.steve.com
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Allows an SSH connection into &lt;code&gt;ssh.steve.com&lt;/code&gt; by simply running &lt;code&gt;ssh myserver&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Note, too, that to avoid entering SSH passwords every time we should add
+&lt;code&gt;Host *
+    AddKeysToAgent yes
+    UseKeychain yes&lt;/code&gt;&lt;/p&gt;
+&lt;h2&gt;Send SSH pub key to server&lt;/h2&gt;
+&lt;p&gt;Use the &lt;code&gt;ssh-copy-id&lt;/code&gt; command to send the appropriate files to the server. Note that if using a different file name (which would be the case if followed above steps), the command structure is as follows:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ssh-copy-id -i ~/.ssh/path/to/key USER@SERVER&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Note that the command does NOT require a references to the &lt;code&gt;.pub&lt;/code&gt; file, just the key itself.&lt;/p&gt;
+&lt;h2&gt;Using hostnames instead of IPs&lt;/h2&gt;
+&lt;p&gt;For LAN connections, ensure that a DNS record is set for the host name. On a Pi-Hole, for instance, set a DNS record named &lt;code&gt;anachreon.earth&lt;/code&gt; to point at &lt;code&gt;192.168.1.98&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Then use &lt;code&gt;anachreon.earth&lt;/code&gt; in the ssh config file.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Adnan Valdes</dc:creator><pubDate>Tue, 02 Feb 2021 00:00:00 -0800</pubDate><guid isPermaLink="false">tag:adnanvaldes.pages.dev,2021-02-02:/add_ssh_key.html</guid><category>blog</category></item></channel></rss>

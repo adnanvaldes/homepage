@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<title>Adnan Valdes</title>
+<meta charset="utf-8" name="charset"/>
+<meta content="Pelican" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://adnanvaldes.pages.dev/theme/css/mustang.css" rel="stylesheet"/>
+<link href="https://adnanvaldes.pages.dev/theme/css/main.css" rel="stylesheet" type="text/css"/>
+<link href="https://adnanvaldes.pages.dev/" rel="alternate" title="Adnan Valdes ATOM Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/feeds/all.atom.xml" rel="alternate" title="Adnan Valdes Full Atom Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/feeds/feed.rss" rel="alternate" title="Adnan Valdes Full RSS Feed" type="application/rss+xml"/>
+</head>
+<body>
+<header class="header">
+<nav class="nav">
+<ul class="nav__ul">
+<li>
+<a href="https://adnanvaldes.pages.dev">~/home/adnan</a>
+</li>
+<li>
+<a href="feeds/atom.xml">~/rss</a>
+</li>
+<li>
+<a href="resume.html">~/resume</a>
+</li>
+<li>
+<a href="archives.html">~/archive</a>
+</li>
+</ul>
+</nav>
+<h1 class="header__h1">Adnan Valdes</h1>
+</header>
+<main>
+<article class="article">
+<h1>[ Racket ]</h1>
+<date class="article__date" datetime="2024-12-22">Published: 22 December 2024</date>
+<h2>Assorted primitives</h2>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">CONSTANT</span><span class="w"> </span><span class="s2">"value"</span><span class="p">)</span><span class="w"> </span><span class="c1">; constant definition</span>
+
+<span class="p">(</span><span class="n">check-expect</span><span class="w"> </span><span class="p">(</span><span class="n">aspect-ratio</span><span class="w"> </span><span class="n">CONSTANT</span><span class="p">)</span><span class="w"> </span><span class="nb">true</span><span class="p">)</span><span class="w"> </span><span class="c1">; like assert in Python</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">aspect-ratio</span><span class="w"> </span><span class="n">argument</span><span class="p">)</span><span class="w"> </span><span class="c1">; function definition</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">image-height</span><span class="w"> </span><span class="n">img</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">image-width</span><span class="w"> </span><span class="n">img</span><span class="p">))</span><span class="w"> </span><span class="c1">; operators and if/else</span>
+<span class="w">        </span><span class="s2">"tall"</span>
+<span class="w">        </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="n">image-height</span><span class="w"> </span><span class="n">img</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">image-width</span><span class="w"> </span><span class="n">img</span><span class="p">))</span>
+<span class="w">        </span><span class="s2">"square"</span>
+<span class="w">        </span><span class="s2">"wide)))</span>
+</code></pre></div>
+<p>Using <code>cond</code> to avopid nested if/else. More like if/elseif.</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">aspect-ratio</span><span class="w"> </span><span class="n">img</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">[(</span><span class="nb">&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">image-height</span><span class="w"> </span><span class="n">img</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">image-width</span><span class="w"> </span><span class="n">img</span><span class="p">))</span><span class="w"> </span><span class="s2">"tall"</span><span class="p">]</span><span class="w"> </span><span class="c1">; note that in Racket () and [] are equivalent</span>
+<span class="w">          </span><span class="p">[(</span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="n">image-height</span><span class="w"> </span><span class="n">img</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">image-width</span><span class="w"> </span><span class="n">img</span><span class="p">)</span><span class="w"> </span><span class="s2">"square"</span><span class="p">]</span>
+<span class="w">          </span><span class="p">[</span><span class="k">else</span><span class="w"> </span><span class="s2">"wide"</span><span class="p">]))</span><span class="w"> </span><span class="c1">; "else" is optional, it can be another condition.</span>
+</code></pre></div>
+<h2>Data definitions</h2>
+</article>
+<ul class="main__ul">
+</ul>
+</main>
+<footer>
+<nav class="nav">
+<ul class="nav__ul">
+<li>
+<a href="mailto:elegant.flame6521@fastmail.com" target="_blank">~/email</a>
+</li>
+<li>
+<a href="https://github.com/adnanvaldes" target="_blank">~/github</a>
+</li>
+<li>
+<a href="https://www.linkedin.com/in/adnanvaldes/" target="_blank">~/linkedin</a>
+</li>
+</ul></nav>
+</footer>
+</body>
+</html>

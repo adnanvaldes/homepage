@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<title>Adnan Valdes</title>
+<meta charset="utf-8" name="charset"/>
+<meta content="Pelican" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://adnanvaldes.pages.dev/theme/css/mustang.css" rel="stylesheet"/>
+<link href="https://adnanvaldes.pages.dev/theme/css/main.css" rel="stylesheet" type="text/css"/>
+<link href="https://adnanvaldes.pages.dev/" rel="alternate" title="Adnan Valdes ATOM Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/feeds/all.atom.xml" rel="alternate" title="Adnan Valdes Full Atom Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/feeds/feed.rss" rel="alternate" title="Adnan Valdes Full RSS Feed" type="application/rss+xml"/>
+</head>
+<body>
+<header class="header">
+<nav class="nav">
+<ul class="nav__ul">
+<li>
+<a href="https://adnanvaldes.pages.dev">~/home/adnan</a>
+</li>
+<li>
+<a href="feeds/atom.xml">~/rss</a>
+</li>
+<li>
+<a href="resume.html">~/resume</a>
+</li>
+<li>
+<a href="archives.html">~/archive</a>
+</li>
+</ul>
+</nav>
+<h1 class="header__h1">Adnan Valdes</h1>
+</header>
+<main>
+<article class="article">
+<h1>[ Data ]</h1>
+<date class="article__date" datetime="2022-12-07">Published: 07 December 2022</date>
+<h2>Problem domain vs program</h2>
+<p>In a problem domain we have information regarding how the system works. For example, in a programn about traffic lights the problem domain will include <em>information</em> about the state of the lights - red, yellow, green. The program itself, however, will <em>represent</em> the information using <em>data</em> in the program - for example, representing a red light as the natural 0.</p>
+<p>The inverse of the relationship is that we can <em>interpret</em> the state of the data, the natural 0 for example, as a red light.</p>
+<h2>Data definitions to describe how we represent data</h2>
+<p>Begin with a data definition that represents the information at hand. For example, for a traffic light problem, we might say the following:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">;; Data:</span>
+
+<span class="c1">;; TLColor is one of:</span>
+<span class="c1">;; - 0</span>
+<span class="c1">;; - 1</span>
+<span class="c1">;; - 2</span>
+<span class="c1">;; interp. color of a traffic light - 0 is red, 1 yellow, 2 green</span>
+<span class="c">#;</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fn-for-tlcolor</span><span class="w"> </span><span class="n">c</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">[(</span><span class="nb">=</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">...</span><span class="p">)]</span>
+<span class="w">          </span><span class="p">[(</span><span class="nb">=</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">...</span><span class="p">)]</span>
+<span class="w">          </span><span class="n">p</span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">...</span><span class="p">)</span>
+<span class="w">    </span><span class="p">))</span>
+
+<span class="c1">;; Functions:</span>
+
+<span class="c1">;; TLColor -&gt; TLColor ; Note how it only consumes a TLColor, which must be [1,2,3]</span>
+<span class="c1">;; produce next color of traffic light</span>
+<span class="p">(</span><span class="n">check-expect</span><span class="w"> </span><span class="p">(</span><span class="n">next-color</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span><span class="w"> </span><span class="p">(</span><span class="n">next-color</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">(</span><span class="n">check-expect</span><span class="w"> </span><span class="p">(</span><span class="n">next-color</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">; (define (next-color c) 0)</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">next-color</span><span class="w"> </span><span class="n">c</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">[(</span><span class="nb">=</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">]</span>
+<span class="w">          </span><span class="p">[(</span><span class="nb">=</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">]</span>
+<span class="w">          </span><span class="p">[(</span><span class="nb">=</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span>
+<span class="w">    </span><span class="p">))</span>
+</code></pre></div>
+</article>
+<ul class="main__ul">
+</ul>
+</main>
+<footer>
+<nav class="nav">
+<ul class="nav__ul">
+<li>
+<a href="mailto:elegant.flame6521@fastmail.com" target="_blank">~/email</a>
+</li>
+<li>
+<a href="https://github.com/adnanvaldes" target="_blank">~/github</a>
+</li>
+<li>
+<a href="https://www.linkedin.com/in/adnanvaldes/" target="_blank">~/linkedin</a>
+</li>
+</ul></nav>
+</footer>
+</body>
+</html>

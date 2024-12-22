@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<title>Adnan Valdes</title>
+<meta charset="utf-8" name="charset"/>
+<meta content="Pelican" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://adnanvaldes.pages.dev/theme/css/mustang.css" rel="stylesheet"/>
+<link href="https://adnanvaldes.pages.dev/theme/css/main.css" rel="stylesheet" type="text/css"/>
+<link href="https://adnanvaldes.pages.dev/" rel="alternate" title="Adnan Valdes ATOM Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/feeds/all.atom.xml" rel="alternate" title="Adnan Valdes Full Atom Feed" type="application/atom+xml"/>
+<link href="https://adnanvaldes.pages.dev/feeds/feed.rss" rel="alternate" title="Adnan Valdes Full RSS Feed" type="application/rss+xml"/>
+</head>
+<body>
+<header class="header">
+<nav class="nav">
+<ul class="nav__ul">
+<li>
+<a href="https://adnanvaldes.pages.dev">~/home/adnan</a>
+</li>
+<li>
+<a href="feeds/atom.xml">~/rss</a>
+</li>
+<li>
+<a href="resume.html">~/resume</a>
+</li>
+<li>
+<a href="archives.html">~/archive</a>
+</li>
+</ul>
+</nav>
+<h1 class="header__h1">Adnan Valdes</h1>
+</header>
+<main>
+<article class="article">
+<h1>[ Nice Renice ]</h1>
+<date class="article__date" datetime="2024-11-18">Published: 18 November 2024</date>
+<h2>How nice are your processes?</h2>
+<p>The <a href="vault/top.md">top</a> command has a row labelled "%Cpu(s)". It looks like this:</p>
+<div class="highlight"><pre><span></span><code><span class="c">%Cpu(s):  1.7 us,  0.6 sy,  0.0 ni, 97.1 id,  0.0 wa,  0.6 hi,  0.0 si,  0.0 st`</span>
+</code></pre></div>
+<p>Here is what <code>man top</code> has to say about them:</p>
+<div class="highlight"><pre><span></span><code><span class="n">us</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="n">running</span><span class="w"> </span><span class="n">un</span><span class="o">-</span><span class="n">niced</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="n">processes</span>
+<span class="n">sy</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="n">running</span><span class="w"> </span><span class="n">kernel</span><span class="w"> </span><span class="n">processes</span>
+<span class="n">ni</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="n">running</span><span class="w"> </span><span class="n">niced</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="n">processes</span>
+<span class="n">id</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="n">spent</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">kernel</span><span class="w"> </span><span class="n">idle</span><span class="w"> </span><span class="n">handler</span>
+<span class="n">wa</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="n">waiting</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">I</span><span class="o">/</span><span class="n">O</span><span class="w"> </span><span class="n">completion</span>
+<span class="n">hi</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="n">spent</span><span class="w"> </span><span class="n">servicing</span><span class="w"> </span><span class="n">hardware</span><span class="w"> </span><span class="n">interrupts</span>
+<span class="n">si</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="n">spent</span><span class="w"> </span><span class="n">servicing</span><span class="w"> </span><span class="n">software</span><span class="w"> </span><span class="n">interrupts</span>
+<span class="n">st</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="n">stolen</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="k">this</span><span class="w"> </span><span class="n">vm</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">hypervisor</span>
+</code></pre></div>
+<p>What even is an <code>un-niced</code> process? </p>
+<p>Basically, Linux has a concept of how "nice" a program is - a value that describes how much priority the process is requesting from the CPU scheduler. In other words, the "nicer" a program is, the less priority it requests, and therefore the more it allows other processes to do their thing (see <a href="https://en.wikipedia.org/wiki/Nice_(Unix)">wikipedia entry</a>).</p>
+<p>And this is incredible, because it means we can define the niceness of a background task, for example, such that we can continue working in the mean time. Consider the following: you run a media server, and you want to compress a bunch of your movies. This is a long term task, and you want to continue serving files in the mean time. You could some thing like this:</p>
+<div class="highlight"><pre><span></span><code>nice -n 19 compress file
+</code></pre></div>
+<p>In general, the higher the niceness value of a process, the less CPU priority it will require. Thus above the <code>compress</code> process would have a niceness of "19", making it particularly nice (note that a negative value would be written as <code>nice --19</code>).</p>
+<h3>Renice</h3>
+<p>The niceness of a program is not set in stone. Assuming we have the long running command, but we need to change its niceness down the line we can use the <code>renice</code> command.</p>
+<p>For example, we can run <code>renice -n 6 &lt;PID&gt;</code> to change lower the priority of the program with that PID. It should be noted that <em>increasing</em> the priority (that is to say, lowering the niceness) requires <code>sudo</code> privileges.</p>
+</article>
+<ul class="main__ul">
+</ul>
+</main>
+<footer>
+<nav class="nav">
+<ul class="nav__ul">
+<li>
+<a href="mailto:elegant.flame6521@fastmail.com" target="_blank">~/email</a>
+</li>
+<li>
+<a href="https://github.com/adnanvaldes" target="_blank">~/github</a>
+</li>
+<li>
+<a href="https://www.linkedin.com/in/adnanvaldes/" target="_blank">~/linkedin</a>
+</li>
+</ul></nav>
+</footer>
+</body>
+</html>
